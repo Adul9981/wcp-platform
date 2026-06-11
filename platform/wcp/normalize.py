@@ -47,13 +47,19 @@ def match_id_of(base: str, kickoff: str | None) -> str:
 
 # ---- 策略打标 ----
 def tag_long(title: str) -> tuple[str, str, list]:
-    """长盘 → (category, bet_type, strategy_tags)"""
+    """长盘 → (category, bet_type, strategy_tags)
+
+    注意（P0.1 不臆造 / P2.1 可解释）：长盘只贴**赛前即成立**的静态策略。
+    策略 C（摇摆队末场生死战）是依赖小组积分的动态、单场末轮策略，长盘上无任何
+    赛前依据，故不静态贴 C —— 与单场路径 _match_strategies 的"赛前不触发动态策略"
+    规则一致（见 7_优化库/策略系统优化项.md P1）。动态 C 仅在单场末轮由真实积分触发。
+    """
     t = title.lower()
     if "world cup winner" in t:
         return "01夺冠", "夺冠", ["B"]
     # —— 深挖新增类别(2026-06-11) ——
     if "group" in t and "winner" in t:
-        return "11小组头名", "小组头名", ["C", "B"]      # 小组第一：摇摆队/强队
+        return "11小组头名", "小组头名", ["B"]           # 小组第一：押我方分级最强队(策略B)
     if "continent" in t and "win" in t:
         return "12大洲夺冠", "大洲夺冠", ["E"]            # 哪个大洲夺冠：宏观信息差
     if ("will" in t or "play in" in t) and "play in the world cup" in t:
@@ -65,9 +71,9 @@ def tag_long(title: str) -> tuple[str, str, list]:
     if any(k in t for k in ["golden ball", "glove", "clean sheet", "ball winner"]):
         return "03个人奖项", "个人奖项", ["F"]
     if any(k in t for k in ["advance", "reach", "knockout", "round of 16", "quarterfinal", "semifinal", "final"]):
-        return "04晋级轮次", "晋级", ["B", "C"]
+        return "04晋级轮次", "晋级", ["B"]               # 晋级确定性(策略B)；C 不静态贴
     if "stage of elimination" in t:
-        return "05各队淘汰阶段", "淘汰阶段", ["C", "E"]
+        return "05各队淘汰阶段", "淘汰阶段", ["E"]        # 各队走多远：信息差(E)；C 不静态贴
     if any(k in t for k in ["last place", "second place", "group", "highest-scoring", "highest scoring"]):
         return "06小组排名", "小组排名", ["A", "E"]
     if any(k in t for k in ["player to score", "hat trick", "free kick", "penalt", "h2h"]):
@@ -152,7 +158,7 @@ def tag_match(title: str, match_teams: list | None = None) -> tuple[str, list, d
     if any(k in t for k in ["halftime", "half-time", "1st half", "first half"]):
         return "半场", [], {}
     if "to advance" in t or "to qualify" in t:
-        return "出线", ["B", "C"], {}
+        return "出线", ["B"], {}      # 出线确定性(策略B)；C 是动态末轮策略，不静态贴
     if not has_suffix:
         tags, ev = _match_strategies(mt)     # 裸对阵 1X2：数据驱动打标
         return "1X2", tags, ev

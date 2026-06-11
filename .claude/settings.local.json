@@ -98,7 +98,11 @@
       "Bash(awk '{print $2}')",
       "Bash(git rm *)",
       "Bash(git add *)",
-      "Bash(git commit -q -m '世界杯预测平台 v0.5：数据管道+三榜+下注方向+动态闭环+复盘+文案系统 *)"
+      "Bash(git commit -q -m '世界杯预测平台 v0.5：数据管道+三榜+下注方向+动态闭环+复盘+文案系统 *)",
+      "Bash(brew install *)",
+      "Bash(python3 -c \"import fastapi, uvicorn, requests, apscheduler; print\\('deps OK'\\)\")",
+      "Bash(curl -s -X POST \"http://127.0.0.1:8731/refresh\" -m 90)",
+      "Bash(git commit -q -m ' *)"
     ]
   }
 }
