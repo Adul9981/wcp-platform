@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 数据库(线上由 pipeline 启动时重建；本地数据不入库)
+*.db
+*.db-journal
+
+# 系统/编辑器
+.DS_Store
+*.log
+/tmp/
+
+# 本地服务日志
+platform/data/wcp.db
+
+# 本地机器设置(不入公开仓库)
+.claude/settings.local.json

@@ -1,0 +1,234 @@
+{
+  "meta": {
+    "scope": "Polymarket球员盘点名的球星",
+    "static_note": "所属队/位置/角色为稳定公开事实；存疑保守标False",
+    "dynamic_note": "available/injury 赛前留空随消息更新(反向爆冷机会)",
+    "generated": "2026-06-11"
+  },
+  "players": {
+    "Messi": {
+      "name_en": "Messi",
+      "name_zh": "梅西",
+      "team": "Argentina",
+      "position": "前锋",
+      "penalty_taker": true,
+      "freekick_taker": true,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Ronaldo": {
+      "name_en": "Ronaldo",
+      "name_zh": "C罗",
+      "team": "Portugal",
+      "position": "前锋",
+      "penalty_taker": true,
+      "freekick_taker": true,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Mbappe": {
+      "name_en": "Mbappe",
+      "name_zh": "姆巴佩",
+      "team": "France",
+      "position": "前锋",
+      "penalty_taker": true,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Dembele": {
+      "name_en": "Dembele",
+      "name_zh": "登贝莱",
+      "team": "France",
+      "position": "边锋",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": false,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Olise": {
+      "name_en": "Olise",
+      "name_zh": "奥利塞",
+      "team": "France",
+      "position": "边锋",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": false,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Yamal": {
+      "name_en": "Yamal",
+      "name_zh": "亚马尔",
+      "team": "Spain",
+      "position": "边锋",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Pedri": {
+      "name_en": "Pedri",
+      "name_zh": "佩德里",
+      "team": "Spain",
+      "position": "中场",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": false,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Haaland": {
+      "name_en": "Haaland",
+      "name_zh": "哈兰德",
+      "team": "Norway",
+      "position": "中锋",
+      "penalty_taker": true,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Alvarez": {
+      "name_en": "Alvarez",
+      "name_zh": "阿尔瓦雷斯",
+      "team": "Argentina",
+      "position": "前锋",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": false,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Salah": {
+      "name_en": "Salah",
+      "name_zh": "萨拉赫",
+      "team": "Egypt",
+      "position": "边锋",
+      "penalty_taker": true,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Mane": {
+      "name_en": "Mane",
+      "name_zh": "马内",
+      "team": "Senegal",
+      "position": "边锋",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Neymar": {
+      "name_en": "Neymar",
+      "name_zh": "内马尔",
+      "team": "Brazil",
+      "position": "前锋",
+      "penalty_taker": true,
+      "freekick_taker": true,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Vinicius Jr.": {
+      "name_en": "Vinicius Jr.",
+      "name_zh": "维尼修斯",
+      "team": "Brazil",
+      "position": "边锋",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Valverde": {
+      "name_en": "Valverde",
+      "name_zh": "巴尔韦德",
+      "team": "Uruguay",
+      "position": "中场",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": false,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Fernandes": {
+      "name_en": "Fernandes",
+      "name_zh": "B费",
+      "team": "Portugal",
+      "position": "中场",
+      "penalty_taker": true,
+      "freekick_taker": false,
+      "main_attacker": true,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    },
+    "Vitinha": {
+      "name_en": "Vitinha",
+      "name_zh": "维蒂尼亚",
+      "team": "Portugal",
+      "position": "中场",
+      "penalty_taker": false,
+      "freekick_taker": false,
+      "main_attacker": false,
+      "dynamic": {
+        "available": null,
+        "injury_note": "",
+        "last_updated": null
+      }
+    }
+  }
+}

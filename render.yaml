@@ -1,0 +1,17 @@
+# Render 蓝图：一键部署世界杯预测平台
+# 部署：登录 render.com → New → Blueprint → 选本仓库 → 自动读取本文件
+services:
+  - type: web
+    name: wcp-worldcup
+    runtime: python
+    rootDir: platform            # wcp 包与 data/ 在 platform/ 下
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn wcp.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: WCP_REFRESH_MIN     # 数据自动刷新间隔(分钟)，线上可调
+        value: "30"
+    # 注：免费档实例休眠后重启会重建数据(pipeline 启动即跑)；
+    # 下注/预测日志在重启后重置。如需持久化，升级加 Render Disk 挂到 platform/data。

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wcp-api",
+      "runtimeExecutable": "uvicorn",
+      "runtimeArgs": ["wcp.api:app", "--app-dir", "platform", "--host", "127.0.0.1", "--port", "8731", "--reload"],
+      "port": 8731
+    }
+  ]
+}
