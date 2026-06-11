@@ -38,7 +38,9 @@ def daily_overview(conn=None):
                 return e
         return b[key][0] if b[key] else None
 
-    blocks = [("🎯 最值得关注", "attention"), ("💎 最被忽视(信息差)", "overlooked"),
+    # 注：榜单键名(attention/overlooked/payoff)为旧框架，待迁移到 今日关注/低风险/高风险
+    # （见待办库"网站三榜重构"里程碑）。此处先去除"信息差"等违背铁律的措辞。
+    blocks = [("🎯 最值得关注", "attention"), ("💎 最被忽视", "overlooked"),
               ("📈 最大盈亏比", "payoff")]
     for label, key in blocks:
         e = pick(key)

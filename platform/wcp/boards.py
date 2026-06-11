@@ -45,7 +45,7 @@ def _rank(topics, scorer, top_n, max_per_match=2, max_per_type=4):
     """评分排序 + 多样性控制。
     - 按场次去重(max_per_match)：防同一场多张子盘刷屏。
     - 按盘口类型限量(max_per_type)：防单一类型(如"首开记录")霸榜，呈现多样机会。
-    注意：多样性控制不剔除低流动——低流动是先发机会的正常状态(策略N)，绝不过滤。"""
+    注意：多样性控制不剔除低流动——低流动是新上线选题的正常状态，绝不过滤。"""
     scored = []
     for t in topics:
         s, reason = scorer(t)

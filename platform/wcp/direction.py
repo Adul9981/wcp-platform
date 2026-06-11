@@ -149,7 +149,7 @@ def recommend(topic: dict) -> dict | None:
                     return {
                         "label": f"押 {wp['name_zh'] if wp else win} 进球更多",
                         "outcome": win, "price": price,
-                        "basis": f"策略E 信息差 · {basis}",
+                        "basis": f"H2H 对决 · {basis}",
                         "confidence": _conf(price),
                     }
 

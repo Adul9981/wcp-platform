@@ -219,7 +219,7 @@ def get_progress(today: str | None = None):
 @app.get("/topics")
 def list_topics(
     line: str | None = Query(None, description="长盘 / 单场"),
-    strategy: str | None = Query(None, description="策略标签 A..N"),
+    strategy: str | None = Query(None, description="策略标签，如 A/B/C/D/F/G/I"),
     is_new: bool | None = None,
     limit: int = Query(50, ge=1, le=500),
     offset: int = 0,

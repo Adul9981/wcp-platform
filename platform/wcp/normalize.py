@@ -61,11 +61,11 @@ def tag_long(title: str) -> tuple[str, str, list]:
     if "group" in t and "winner" in t:
         return "11小组头名", "小组头名", ["B"]           # 小组第一：押我方分级最强队(策略B)
     if "continent" in t and "win" in t:
-        return "12大洲夺冠", "大洲夺冠", ["E"]            # 哪个大洲夺冠：宏观信息差
+        return "12大洲夺冠", "大洲夺冠", []               # 哪个大洲夺冠：无适用策略（策略E已删）
     if ("will" in t or "play in" in t) and "play in the world cup" in t:
-        return "13球员参赛", "球员参赛", ["E"]            # 球星是否参赛：伤病/入选信息差
+        return "13球员参赛", "球员参赛", []               # 球星是否参赛：无适用策略（策略E已删）
     if "relocated" in t or "moved" in t:
-        return "14赛事变动", "赛事变动", ["E"]            # 比赛是否移址：政治/花边
+        return "14赛事变动", "赛事变动", []               # 比赛是否移址：政治/花边，无适用策略
     if any(k in t for k in ["golden boot", "top scorer", "goalscorer", "most goal", "most assist", "boot"]):
         return "02射手榜", "射手榜", ["F"]
     if any(k in t for k in ["golden ball", "glove", "clean sheet", "ball winner"]):
@@ -73,17 +73,17 @@ def tag_long(title: str) -> tuple[str, str, list]:
     if any(k in t for k in ["advance", "reach", "knockout", "round of 16", "quarterfinal", "semifinal", "final"]):
         return "04晋级轮次", "晋级", ["B"]               # 晋级确定性(策略B)；C 不静态贴
     if "stage of elimination" in t:
-        return "05各队淘汰阶段", "淘汰阶段", ["E"]        # 各队走多远：信息差(E)；C 不静态贴
+        return "05各队淘汰阶段", "淘汰阶段", ["B"]        # 各队走多远：强队地板确定性(B)；C 不静态贴
     if any(k in t for k in ["last place", "second place", "group", "highest-scoring", "highest scoring"]):
-        return "06小组排名", "小组排名", ["A", "E"]
+        return "06小组排名", "小组排名", ["A"]
     if any(k in t for k in ["player to score", "hat trick", "free kick", "penalt", "h2h"]):
-        return "07球员表现", "球员", ["F", "D"]
+        return "07球员表现", "球员", ["F"]
     if any(k in t for k in ["trump", "cry", "photo", "attend"]):
-        return "08花边政治", "花边", ["D"]
+        return "08花边政治", "花边", []
     if any(k in t for k in ["record", "margin", "fastest", "total tournament", "yellow card", "10+"]):
         return "09赛事纪录", "纪录", []
     if any(k in t for k in ["furthest advancing", "worst-placed", "fair play"]):
-        return "10大洲其他", "大洲", ["E"]
+        return "10大洲其他", "大洲", []
     return "99其他", "", []
 
 
@@ -154,7 +154,7 @@ def tag_match(title: str, match_teams: list | None = None) -> tuple[str, list, d
     if "corner" in t:
         return "角球", ["F"], {}
     if "first" in t and "score" in t:
-        return "首开记录", ["D"], {}
+        return "首开记录", [], {}
     if any(k in t for k in ["halftime", "half-time", "1st half", "first half"]):
         return "半场", [], {}
     if "to advance" in t or "to qualify" in t:
