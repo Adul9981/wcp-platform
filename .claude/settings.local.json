@@ -135,7 +135,8 @@
       "Bash(sed -n '140,160p' platform/wcp/direction.py)",
       "Bash(sed -n '38,45p' platform/wcp/copywriting.py)",
       "Bash(sed -n '58,90p' platform/wcp/normalize.py)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(python -c ' *)"
     ]
   }
 }
