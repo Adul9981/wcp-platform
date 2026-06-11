@@ -102,7 +102,28 @@
       "Bash(brew install *)",
       "Bash(python3 -c \"import fastapi, uvicorn, requests, apscheduler; print\\('deps OK'\\)\")",
       "Bash(curl -s -X POST \"http://127.0.0.1:8731/refresh\" -m 90)",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(env)",
+      "Bash(git check-ignore *)",
+      "Bash(curl -s http://127.0.0.1:8799/ -m 10)",
+      "Bash(curl -s \"http://127.0.0.1:8799/boards?top_n=1\" -m 10)",
+      "Bash(pkill -f \"wcp.api:app --host 127.0.0.1 --port 8799\")",
+      "Bash(git -C /Users/ad/世界杯 status)",
+      "Bash(git -C /Users/ad/世界杯 diff --stat HEAD)",
+      "Bash(git -C /Users/ad/世界杯 log --oneline -3)",
+      "Bash(git -C /Users/ad/世界杯 status -uall --short)",
+      "Bash(git -C /Users/ad/世界杯 ls-files --others --exclude-standard)",
+      "Bash(git -C /Users/ad/世界杯 ls-files)",
+      "Bash(git -C /Users/ad/世界杯 log --oneline -5)",
+      "Bash(git -C /Users/ad/世界杯 show --stat HEAD)",
+      "Bash(git -C /Users/ad/世界杯 diff HEAD~1 HEAD --name-only)",
+      "Bash(git -C /Users/ad/世界杯 ls-files \"2_数据库/预测市场接入.md\" \"README.md\")",
+      "Bash(git -C /Users/ad/世界杯 show HEAD:\"2_数据库/预测市场接入.md\")",
+      "Bash(git -C /Users/ad/世界杯 diff HEAD -- 2_数据库/抽签分组结果.md 5_工具建设库/仓位管理系统.md 2_数据库/预测市场接入.md 1_想法库/核心机会框架.md)",
+      "Bash(echo \"exitcode=$?\")",
+      "Bash(git -C /Users/ad/世界杯 status --porcelain -uall)",
+      "Bash(git -C /Users/ad/世界杯 add .claude/settings.local.json)",
+      "Bash(git -C /Users/ad/世界杯 commit -m ' *)"
     ]
   }
 }
