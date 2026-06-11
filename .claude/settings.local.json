@@ -123,7 +123,19 @@
       "Bash(echo \"exitcode=$?\")",
       "Bash(git -C /Users/ad/世界杯 status --porcelain -uall)",
       "Bash(git -C /Users/ad/世界杯 add .claude/settings.local.json)",
-      "Bash(git -C /Users/ad/世界杯 commit -m ' *)"
+      "Bash(git -C /Users/ad/世界杯 commit -m ' *)",
+      "Bash(sed -n '27,36p' 2_数据库/预测选题全景.md)",
+      "Bash(sed -n '172,178p' 2_数据库/预测市场接入.md)",
+      "Bash(sed -n '210,224p' 2_数据库/预测市场接入.md)",
+      "Bash(sed -n '66,74p' 5_工具建设库/文案系统.md)",
+      "Bash(sed -n '31,36p' 2_数据库/球员信息库.md)",
+      "Bash(sed -n '70,90p' 5_工具建设库/平台总体规划.md)",
+      "Bash(sed -n '10,25p' 5_工具建设库/平台建设原则.md)",
+      "Bash(sed -n '18,32p' 5_工具建设库/预测平台规划.md)",
+      "Bash(sed -n '140,160p' platform/wcp/direction.py)",
+      "Bash(sed -n '38,45p' platform/wcp/copywriting.py)",
+      "Bash(sed -n '58,90p' platform/wcp/normalize.py)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
