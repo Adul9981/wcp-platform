@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>后台管理 · 世界杯预测平台</title>
+<style>
+  :root{
+    --bg:#0d1117;--card:#161b22;--border:#222a35;--txt:#e6edf3;--muted:#8b949e;
+    --gold:#f0b429;--green:#2ea043;--blue:#388bfd;--red:#f85149;--chip:#21262d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+  header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:rgba(13,17,23,.95);backdrop-filter:blur(8px);z-index:20}
+  header h1{font-size:17px}
+  header a{font-size:13px;color:var(--blue);text-decoration:none}
+  .wrap{max-width:900px;margin:0 auto;padding:20px 16px}
+  /* 文风指南 */
+  details.guide{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:20px}
+  details.guide summary{cursor:pointer;padding:11px 14px;font-size:14px;font-weight:600;list-style:none;color:var(--gold)}
+  details.guide summary::-webkit-details-marker{display:none}
+  details.guide summary::before{content:"▸ "}
+  details.guide[open] summary::before{content:"▾ "}
+  .guide-body{padding:0 16px 16px;font-size:13px;color:var(--muted);line-height:1.8}
+  .guide-body h3{color:var(--txt);margin:12px 0 4px;font-size:13px}
+  .guide-body .ex{padding:8px 10px;border-radius:6px;margin:4px 0;font-size:12px}
+  .guide-body .ex.ok{background:#16241a;border-left:3px solid var(--green);color:#cfe9d8}
+  .guide-body .ex.bad{background:#2a1a1a;border-left:3px solid var(--red);color:#e9c8c8}
+  /* 提交区 */
+  .section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
+  .section h2{font-size:15px;font-weight:700;margin-bottom:14px}
+  .row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .row label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  .fi{flex:1;min-width:120px}
+  input,select,textarea{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:6px;color:var(--txt);padding:8px 10px;font-size:13px;font-family:inherit}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+  textarea{min-height:180px;resize:vertical;line-height:1.6}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s}
+  .btn-primary{background:var(--blue);color:#000}
+  .btn-primary:hover{opacity:.85}
+  .btn-ghost{background:none;border:1px solid var(--border);color:var(--muted)}
+  .btn-ghost:hover{border-color:var(--txt);color:var(--txt)}
+  .btn-pub{background:#16241a;border:1px solid var(--green);color:var(--green)}
+  .btn-pub:hover{background:var(--green);color:#000}
+  .btn-del{background:none;border:1px solid transparent;color:var(--red);padding:4px 8px;font-size:12px;border-radius:5px;cursor:pointer}
+  .btn-del:hover{border-color:var(--red);background:#2a1a1a}
+  /* 草稿卡片 */
+  .draft{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:12px}
+  .draft-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .draft-header .left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .badge{font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600}
+  .badge-draft{background:var(--chip);color:var(--muted)}
+  .badge-pub{background:#16241a;color:var(--green)}
+  .draft-type{font-size:11px;padding:2px 8px;border-radius:5px;background:#1c1b13;color:var(--gold)}
+  .draft-ts{font-size:11px;color:var(--muted)}
+  .draft-title{font-size:14px;font-weight:700;margin-bottom:6px}
+  .draft-body{font-size:13px;color:var(--muted);white-space:pre-wrap;max-height:140px;overflow:hidden;line-height:1.6;position:relative}
+  .draft-body.expanded{max-height:none}
+  .fade{position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,#0d1117);pointer-events:none}
+  .draft-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  .draft-id{font-size:11px;color:var(--muted)}
+  /* 编辑弹层 */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:12px;width:100%;max-width:640px;padding:20px;max-height:90vh;overflow-y:auto}
+  .modal h2{font-size:16px;margin-bottom:14px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2ea043;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:200;opacity:0;transition:.3s}
+  .toast.show{opacity:1}
+  .loading{text-align:center;color:var(--muted);padding:30px}
+  .empty{text-align:center;color:var(--muted);padding:30px;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚙️ 后台管理</h1>
+  <a href="/">← 返回前台</a>
+</header>
+
+<div class="wrap">
+
+  <!-- 文风指南 -->
+  <details class="guide">
+    <summary>📋 文风指南（去 AI 味，提交前参考）</summary>
+    <div class="guide-body">
+      <h3>核心原则</h3>
+      <p>结论前置 · 数字说话 · 有态度不模糊 · 短句（一段 2-4 句） · 承认不确定性要干脆</p>
+      <h3>禁忌词（提交前删掉）</h3>
+      <p style="color:#f85149">值得注意的是 / 不得不说 / 综上所述 / 整体来看 / 需要指出的是 / 从某种程度上 / 可以预见 / 与此同时 / 一定程度上</p>
+      <h3>示例对比</h3>
+      <div class="ex ok">✅ 法国这场稳，赔率 1.12x 打的是确定性不是回报。小组第一没悬念。</div>
+      <div class="ex bad">❌ 综合考虑多方面因素，法国队在本次小组赛中表现不俗，整体来看夺得小组头名的可能性较大。</div>
+      <div class="ex ok">✅ 摩洛哥末轮这局说不好——平局也出线、赢也出线，双方动力不统一，摇摆。</div>
+      <div class="ex bad">❌ 摩洛哥在末轮比赛中面临复杂的出线形势，值得注意的是双方均有可能出线，因此比赛走势存在较大不确定性。</div>
+    </div>
+  </details>
+
+  <!-- 提交新内容 -->
+  <div class="section">
+    <h2>📝 提交新内容</h2>
+    <div class="row">
+      <div class="fi" style="flex:0 0 140px">
+        <label>类型</label>
+        <select id="iType">
+          <option value="分析">分析</option>
+          <option value="赛前">赛前</option>
+          <option value="赛后">赛后</option>
+          <option value="策略">策略</option>
+        </select>
+      </div>
+      <div class="fi">
+        <label>标题（可选）</label>
+        <input id="iTitle" placeholder="如：法国小组赛三战分析">
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:4px">原始内容（AI 生成的草稿，提交后系统自动基础清洗）</label>
+      <textarea id="iRaw" placeholder="粘贴 AI 生成的分析内容…&#10;&#10;提交后系统会自动去掉最明显的 AI 套话（综上所述、值得注意的是等），但深度文风调整需要你在对话里请 Claude 精修后，再把优化版粘回到「更新内容」里。"></textarea>
+    </div>
+    <div id="submitHint" style="font-size:12px;color:var(--muted);margin-bottom:12px;display:none">
+      ✅ 基础清洗完成。建议：把草稿内容发给 Claude，让它优化文风后再发布。
+    </div>
+    <button class="btn btn-primary" onclick="submitPost()">提交草稿</button>
+  </div>
+
+  <!-- 草稿列表 -->
+  <div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2 style="margin:0">📄 草稿 &amp; 已发布</h2>
+      <button class="btn btn-ghost" onclick="loadPosts()" style="font-size:12px;padding:5px 12px">刷新</button>
+    </div>
+    <div id="postsList"><div class="loading">加载中…</div></div>
+  </div>
+
+</div>
+
+<!-- 编辑弹层 -->
+<div class="modal-bg hidden" id="editModal">
+  <div class="modal">
+    <h2>✏️ 更新内容</h2>
+    <div style="margin-bottom:10px">
+      <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:4px">标题</label>
+      <input id="eTitle">
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:4px">内容（粘贴优化后版本）</label>
+      <textarea id="eContent" style="min-height:260px"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="saveEdit()">保存</button>
+      <button class="btn btn-ghost" onclick="closeEdit()">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let editingId = null;
+
+function toast(msg, isErr=false){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.style.background=isErr?"#f85149":"#2ea043";
+  t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+function fmtTime(s){ if(!s)return"—"; const d=new Date(s); return d.toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}); }
+
+async function submitPost(){
+  const raw=document.getElementById("iRaw").value.trim();
+  if(!raw){alert("请填写内容");return;}
+  const body={type:document.getElementById("iType").value, title:document.getElementById("iTitle").value.trim(), raw_content:raw};
+  const r=await fetch("/admin/posts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(d.ok){
+    toast("草稿已保存 · 基础清洗完成");
+    document.getElementById("iRaw").value=""; document.getElementById("iTitle").value="";
+    document.getElementById("submitHint").style.display="block";
+    setTimeout(()=>document.getElementById("submitHint").style.display="none",4000);
+    loadPosts();
+  } else { toast("提交失败",true); }
+}
+
+async function loadPosts(){
+  const el=document.getElementById("postsList");
+  el.innerHTML='<div class="loading">加载中…</div>';
+  const d=await (await fetch("/admin/posts")).json();
+  if(!d.posts||!d.posts.length){el.innerHTML='<div class="empty">还没有内容，提交第一篇吧</div>';return;}
+  el.innerHTML=d.posts.map(p=>{
+    const isPub=p.status==="published";
+    const expanded=false;
+    return `<div class="draft" id="post${p.id}">
+      <div class="draft-header">
+        <div class="left">
+          <span class="badge ${isPub?'badge-pub':'badge-draft'}">${isPub?"已发布":"草稿"}</span>
+          <span class="draft-type">${p.type}</span>
+          <span class="draft-ts">${isPub?"发布于 "+fmtTime(p.published_ts):"创建 "+fmtTime(p.created_ts)}</span>
+        </div>
+        <button class="btn-del" onclick="deletePost(${p.id})">删除</button>
+      </div>
+      ${p.title?`<div class="draft-title">${p.title}</div>`:""}
+      <div class="draft-body" id="body${p.id}">${p.content.replace(/</g,'&lt;')}<div class="fade" id="fade${p.id}"></div></div>
+      <div class="draft-actions">
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="openEdit(${p.id},'${(p.title||'').replace(/'/g,"\\'")}')">✏️ 更新内容</button>
+        ${!isPub?`<button class="btn btn-pub" style="font-size:12px;padding:5px 12px" onclick="publishPost(${p.id})">🚀 发布</button>`:'<button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="unpublishPost('+p.id+')">↩️ 撤回</button>'}
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="toggleExpand(${p.id})">展开/收起</button>
+        <span class="draft-id">#${p.id}</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleExpand(id){
+  const b=document.getElementById("body"+id);
+  const f=document.getElementById("fade"+id);
+  const exp=b.classList.toggle("expanded");
+  if(f) f.style.display=exp?"none":"block";
+}
+
+function openEdit(id, title){
+  editingId=id;
+  // 找内容
+  const b=document.getElementById("body"+id);
+  const raw=b?b.innerText.trim():"";
+  document.getElementById("eTitle").value=title;
+  document.getElementById("eContent").value=raw;
+  document.getElementById("editModal").classList.remove("hidden");
+}
+
+function closeEdit(){ document.getElementById("editModal").classList.add("hidden"); editingId=null; }
+
+async function saveEdit(){
+  if(!editingId)return;
+  const content=document.getElementById("eContent").value.trim();
+  const title=document.getElementById("eTitle").value.trim();
+  if(!content){alert("内容不能为空");return;}
+  const r=await fetch(`/admin/posts/${editingId}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({content,title:title||undefined})});
+  const d=await r.json();
+  if(d.ok){ toast("已保存"); closeEdit(); loadPosts(); }
+  else toast("保存失败",true);
+}
+
+async function publishPost(id){
+  const r=await fetch(`/admin/posts/${id}/publish`,{method:"POST"});
+  const d=await r.json();
+  if(d.ok){ toast("已发布 → 前台「分析」栏可见"); loadPosts(); }
+  else toast("发布失败",true);
+}
+
+async function unpublishPost(id){
+  const r=await fetch(`/admin/posts/${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:"draft"})});
+  const d=await r.json();
+  if(d.ok){ toast("已撤回为草稿"); loadPosts(); }
+  else toast("操作失败",true);
+}
+
+async function deletePost(id){
+  if(!confirm(`确认删除 #${id}？`))return;
+  const r=await fetch(`/admin/posts/${id}`,{method:"DELETE"});
+  const d=await r.json();
+  if(d.ok){ toast("已删除"); loadPosts(); }
+  else toast("删除失败",true);
+}
+
+document.getElementById("editModal").addEventListener("click",e=>{ if(e.target===document.getElementById("editModal"))closeEdit(); });
+
+loadPosts();
+</script>
+</body>
+</html>

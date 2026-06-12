@@ -63,6 +63,18 @@ CREATE TABLE IF NOT EXISTS prediction_log (
     PRIMARY KEY (match_id, predicted)
 );
 
+-- 后台管理：手写/优化后的分析文章（发布到网站）
+CREATE TABLE IF NOT EXISTS posts (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    type         TEXT DEFAULT '分析',   -- 分析/赛前/赛后/策略
+    title        TEXT DEFAULT '',
+    raw_content  TEXT DEFAULT '',       -- 用户原始输入（AI生成原文）
+    content      TEXT NOT NULL,         -- 优化后内容（展示用）
+    status       TEXT DEFAULT 'draft',  -- draft / published
+    created_ts   TEXT,
+    published_ts TEXT
+);
+
 -- 复盘B：用户下注日志（手动记录操作）
 CREATE TABLE IF NOT EXISTS bet_log (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,

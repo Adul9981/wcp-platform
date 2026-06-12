@@ -78,6 +78,24 @@ def tier_gap(a, b):
     return abs(order[ta] - order[tb])
 
 
+# 分级 → 阶段预期整数（teams.json 补入 stage_floor/stage_ceiling 前的代理）
+# 值越大 = 阶段越高：5=冠军 4=决赛 3=四强 2=八强 1=十六强 0=小组出线 -1=小组出局
+_TIER_FLOOR = {"S": 3, "A": 2, "B": 1, "C": 0, "D": -1}   # 该级别"应该"到达的最低阶段
+_TIER_CEIL  = {"S": 5, "A": 4, "B": 3, "C": 2, "D": 1}    # 高于此 = 长赔区
+
+
+def stage_floor_int(name: str) -> int | None:
+    """队伍地板阶段整数（S→四强3, A→八强2, B→十六强1, C→出线0, D→小组出局-1）。"""
+    t = get(name)
+    return _TIER_FLOOR.get(t["tier"]) if t else None
+
+
+def stage_ceil_int(name: str) -> int | None:
+    """队伍天花板阶段整数（高于此 = 长赔超预期区）。"""
+    t = get(name)
+    return _TIER_CEIL.get(t["tier"]) if t else None
+
+
 def groups():
     """按组聚合：{'A': [team,...], ...}"""
     out = {}

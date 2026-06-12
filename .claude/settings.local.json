@@ -136,7 +136,8 @@
       "Bash(sed -n '38,45p' platform/wcp/copywriting.py)",
       "Bash(sed -n '58,90p' platform/wcp/normalize.py)",
       "Bash(git commit -m ' *)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); t=list\\(d['teams'].items\\(\\)\\)[0]; print\\(t[0]\\); print\\(json.dumps\\(t[1], ensure_ascii=False, indent=2\\)\\)\")"
     ]
   }
 }

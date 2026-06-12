@@ -10,7 +10,7 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import FileResponse
 
 from pydantic import BaseModel
-from . import db, boards, glossary, reference, scheduler, review, copywriting
+from . import db, boards, glossary, reference, scheduler, review, copywriting, admin
 
 
 @asynccontextmanager
@@ -21,7 +21,8 @@ async def lifespan(app):
     scheduler.stop()
 
 
-app = FastAPI(title="WCP 世界杯预测平台 API", version="0.4", lifespan=lifespan)
+app = FastAPI(title="WCP 世界杯预测平台 API", version="0.5", lifespan=lifespan)
+app.include_router(admin.router)
 
 _STATIC = os.path.join(os.path.dirname(__file__), "static")
 
@@ -30,6 +31,12 @@ _STATIC = os.path.join(os.path.dirname(__file__), "static")
 def home():
     """单页仪表盘（三榜可视化）。"""
     return FileResponse(os.path.join(_STATIC, "index.html"))
+
+
+@app.get("/admin")
+def admin_page():
+    """后台管理页。"""
+    return FileResponse(os.path.join(_STATIC, "admin.html"))
 
 
 def _row_to_topic(r):
@@ -199,9 +206,9 @@ def refresh_now():
 
 
 @app.get("/boards")
-def get_boards(top_n: int = Query(15, ge=1, le=50)):
-    """三榜：最值得关注 / 最被忽视 / 最大盈亏比。"""
-    return boards.generate(top_n=top_n)
+def get_boards(top_n: int = Query(15, ge=1, le=50), today: str | None = None):
+    """三榜：📅今日关注 / 🛡️低风险 / 🎲高风险。today 格式 YYYY-MM-DD(UTC)，默认服务器当日。"""
+    return boards.generate(top_n=top_n, today=today)
 
 
 @app.get("/strategies")

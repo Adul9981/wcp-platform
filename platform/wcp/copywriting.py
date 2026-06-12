@@ -38,10 +38,7 @@ def daily_overview(conn=None):
                 return e
         return b[key][0] if b[key] else None
 
-    # 注：榜单键名(attention/overlooked/payoff)为旧框架，待迁移到 今日关注/低风险/高风险
-    # （见待办库"网站三榜重构"里程碑）。此处先去除"信息差"等违背铁律的措辞。
-    blocks = [("🎯 最值得关注", "attention"), ("💎 最被忽视", "overlooked"),
-              ("📈 最大盈亏比", "payoff")]
+    blocks = [("📅 今日关注", "today"), ("🛡️ 低风险", "low_risk"), ("🎲 高风险", "high_risk")]
     for label, key in blocks:
         e = pick(key)
         if not e:
@@ -61,7 +58,7 @@ def daily_overview(conn=None):
 def pre_match(conn=None):
     """赛前预测帖：取最值得关注里有方向的前3场单场。"""
     b = boards.generate(conn, top_n=20)
-    picks = [e for e in b["attention"] if e["line"] == "单场" and e.get("direction")][:3]
+    picks = [e for e in b["today"] if e["line"] == "单场" and e.get("direction")][:3]
     if not picks:
         return None
     lines = ["⚽ 赛前预测 · 今日精选", ""]
