@@ -3,211 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>世界杯预测平台 · 每日机会榜</title>
+<title>世界杯预测平台 · 2026</title>
 <style>
-  :root{
-    --bg:#0d1117; --card:#161b22; --border:#222a35; --txt:#e6edf3; --muted:#8b949e;
-    --gold:#f0b429; --green:#2ea043; --blue:#388bfd; --red:#f85149; --chip:#21262d;
-    --purple:#8b5cf6;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5}
-  header{padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(13,17,23,.94);backdrop-filter:blur(8px);z-index:20}
-  header h1{font-size:19px;display:flex;align-items:center;gap:8px}
-  .meta{font-size:12px;color:var(--muted);margin-top:4px}
-  .meta b{color:var(--green)}
-  .wrap{max-width:1320px;margin:0 auto;padding:16px}
-  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-  .tab{padding:8px 14px;border:1px solid var(--border);border-radius:20px;background:var(--card);color:var(--muted);cursor:pointer;font-size:14px;white-space:nowrap}
-  .tab.active{color:var(--txt);border-color:var(--gold);background:#1c1b13}
-  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden}
-  .panel summary{cursor:pointer;padding:11px 14px;font-size:14px;font-weight:600;list-style:none}
-  .panel summary::-webkit-details-marker{display:none}
-  .panel summary::before{content:"▸ ";color:var(--gold)}
-  .panel[open] summary::before{content:"▾ "}
-  .strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;padding:0 14px 14px}
-  .strat{font-size:12px;color:var(--muted)}
-  .strat b{color:var(--green)}
-  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-  .filters .lbl{font-size:12px;color:var(--muted);margin-right:2px}
-  .fchip{font-size:12px;padding:5px 11px;border-radius:16px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer}
-  .fchip.active{color:#fff;border-color:var(--blue);background:#10233f}
-  /* 三榜 */
-  .boards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media(max-width:900px){.boards{grid-template-columns:1fr}.tab.hide-mobile{display:none}}
-  .col h2{font-size:15px;margin-bottom:10px;padding-left:8px;border-left:3px solid var(--gold)}
-  .col.low_risk h2{border-color:var(--green)}
-  .col.high_risk h2{border-color:var(--red)}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
-  .card:hover{border-color:#3d4856}
-  .card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-  .card .title{font-size:14px;font-weight:600;flex:1}
-  .rank{font-size:12px;color:var(--muted);min-width:20px}
-  .chips{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
-  .chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--chip);color:var(--muted)}
-  .chip.s{background:#1f2d1f;color:#7ee787;cursor:help}
-  .chip.new{background:#3d2b12;color:var(--gold)}
-  .chip.risk-low{background:#16241a;color:#7ee787}
-  .chip.risk-high{background:#2d1a1a;color:var(--red)}
-  .chip.risk-swing{background:#2d1f0a;color:#e3b341}
-  .nums{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:6px 0;flex-wrap:wrap}
-  .nums .v{color:var(--txt);font-weight:600}
-  .pay{color:var(--green);font-weight:700}
-  .pay.high{color:var(--gold)}
-  .reason{font-size:12px;color:var(--muted);margin:6px 0;padding:6px 8px;background:#10151c;border-radius:6px}
-  .dir{margin:7px 0;padding:8px 10px;background:#13211a;border:1px solid #2c4a39;border-radius:7px;font-size:13px;color:#cfe9d8}
-  .dir b{color:#7ee787;font-size:14px}
-  .dir .dprice{color:var(--green);font-weight:700;margin-left:4px}
-  .dir .dconf{float:right;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:1px 7px}
-  .dir .dbasis{font-size:11px;color:var(--muted);margin-top:3px}
-  .dir.none{background:#15161a;border-color:var(--border);color:var(--muted)}
-  .rtab{width:100%;border-collapse:collapse;font-size:13px}
-  .rtab td{padding:6px 8px;border-bottom:1px solid var(--border)}
-  .rtab thead td{color:var(--muted);font-size:12px}
-  .betform{display:flex;gap:6px;flex-wrap:wrap}
-  .betform input{background:#0d1117;border:1px solid var(--border);border-radius:6px;color:var(--txt);padding:6px 8px;font-size:13px;min-width:80px}
-  .mini{font-size:12px;background:none;border:1px solid var(--blue);color:var(--blue);border-radius:5px;padding:2px 8px;cursor:pointer}
-  .mini.add{background:var(--blue);color:#001;font-weight:600}
-  .mini.del{border-color:#f85149;color:#f85149}
-  .go{display:inline-block;margin-top:4px;font-size:12px;color:var(--blue);text-decoration:none;border:1px solid var(--blue);border-radius:6px;padding:5px 10px}
-  .go:hover{background:#10233f}
-  /* 进度页 */
-  .pbar{height:10px;background:var(--chip);border-radius:6px;overflow:hidden;margin:10px 0}
-  .pbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold))}
-  .timeline{display:flex;flex-direction:column;gap:10px;margin-top:14px}
-  .stage{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
-  .stage .dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex-shrink:0;background:var(--muted)}
-  .stage.done .dot{background:var(--green)} .stage.live .dot{background:var(--gold);box-shadow:0 0 0 4px #3d2b1255}
-  .stage .sname{font-weight:600;font-size:15px}
-  .stage .sdate{font-size:12px;color:var(--muted)}
-  .stage .sdesc{font-size:12px;color:var(--muted);margin-top:4px}
-  .stage .stag{font-size:11px;padding:2px 8px;border-radius:5px;margin-left:auto;white-space:nowrap}
-  .stag.done{background:#16241a;color:#7ee787} .stag.live{background:#3d2b12;color:var(--gold)} .stag.todo{background:var(--chip);color:var(--muted)}
-  /* 分析文章 */
-  .post-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
-  .post-card .post-meta{font-size:12px;color:var(--muted);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap}
-  .post-card .post-type{font-size:11px;padding:2px 8px;border-radius:5px;background:#1c1b13;color:var(--gold);font-weight:600}
-  .post-card .post-title{font-size:16px;font-weight:700;margin-bottom:10px;color:var(--txt)}
-  .post-card .post-body{font-size:14px;line-height:1.8;color:#c8d3de;white-space:pre-wrap}
-  footer{padding:18px 16px;color:var(--muted);font-size:11px;text-align:center;border-top:1px solid var(--border);margin-top:20px}
-  .loading{text-align:center;color:var(--muted);padding:40px}
-  .err{color:var(--red);text-align:center;padding:20px}
-  .hidden{display:none}
+:root{
+  --bg:#f6f8fa;--card:#fff;--border:#d0d7de;--txt:#1f2328;--muted:#57606a;
+  --gold:#9a6700;--green:#1a7f37;--blue:#0969da;--red:#d1242f;--chip:#eaeef2;
+  --shadow:0 1px 3px rgba(0,0,0,.08);--shadow-hover:0 3px 10px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5;font-size:15px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── header ── */
+header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;padding:12px 20px}
+.hrow1{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hrow1 h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:6px}
+.hrow1 h1 span{font-size:13px;color:var(--muted);font-weight:400}
+.hlinks{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hlink{font-size:13px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);color:var(--txt);white-space:nowrap;transition:.15s}
+.hlink:hover{border-color:var(--blue);color:var(--blue);text-decoration:none}
+.hlink.reg{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.hlink.reg:hover{opacity:.88;color:#fff}
+.hcode{font-size:13px;color:var(--muted);border:1px solid var(--border);padding:3px 9px;border-radius:6px;background:var(--chip)}
+.hrow2{margin-top:6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.hrow2 b{color:var(--green)}
+#refreshBtn{font-size:12px;padding:3px 10px;border:1px solid var(--border);border-radius:5px;background:#fff;color:var(--blue);cursor:pointer}
+#refreshBtn:hover{background:var(--chip)}
+
+/* ── layout ── */
+.wrap{max-width:1320px;margin:0 auto;padding:16px}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:7px 14px;border:1px solid var(--border);border-radius:20px;background:#fff;color:var(--muted);cursor:pointer;font-size:14px;white-space:nowrap;transition:.15s}
+.tab:hover{border-color:var(--blue);color:var(--blue)}
+.tab.active{color:#fff;background:var(--blue);border-color:var(--blue)}
+@media(max-width:700px){.tab.hide-m{display:none}}
+
+/* ── strategy panel ── */
+.panel{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden}
+.panel summary{cursor:pointer;padding:11px 14px;font-size:14px;font-weight:600;list-style:none;display:flex;align-items:center;gap:6px}
+.panel summary::-webkit-details-marker{display:none}
+.panel summary::after{content:"▸";color:var(--muted);margin-left:auto}
+.panel[open] summary::after{content:"▾"}
+.strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;padding:0 14px 14px}
+.strat{font-size:12px;color:var(--muted);padding:8px 10px;background:var(--bg);border-radius:6px}
+.strat b{color:var(--green);display:block;margin-bottom:2px}
+.pm-note{margin:0 14px 12px;padding:10px 12px;background:#ddf4ff;border:1px solid #54aeff55;border-radius:7px;font-size:13px;color:#0550ae}
+
+/* ── filters ── */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filters .lbl{font-size:12px;color:var(--muted)}
+.fchip{font-size:12px;padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:.15s}
+.fchip:hover{border-color:var(--blue)}
+.fchip.active{color:#fff;background:var(--blue);border-color:var(--blue)}
+
+/* ── boards ── */
+.boards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:900px){.boards{grid-template-columns:1fr}}
+.col h2{font-size:15px;font-weight:700;margin-bottom:10px;padding:8px 12px;border-radius:8px;background:var(--chip)}
+.col.today h2{background:#ddf4ff;color:#0550ae}
+.col.low_risk h2{background:#dafbe1;color:var(--green)}
+.col.high_risk h2{background:#ffebe9;color:var(--red)}
+
+/* ── cards ── */
+.card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:10px;box-shadow:var(--shadow);transition:.15s}
+.card:hover{box-shadow:var(--shadow-hover);border-color:#b1bac4}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.card .ctitle{font-size:14px;font-weight:600;flex:1;line-height:1.4}
+.rank{font-size:12px;color:var(--muted);min-width:22px}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
+.chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--chip);color:var(--muted)}
+.chip.s{background:#dafbe1;color:var(--green);cursor:help}
+.chip.new{background:#fff8c5;color:var(--gold)}
+.chip.risk-low{background:#dafbe1;color:var(--green)}
+.chip.risk-high{background:#ffebe9;color:var(--red)}
+.chip.risk-swing{background:#fff8c5;color:var(--gold)}
+.nums{display:flex;gap:12px;font-size:12px;color:var(--muted);margin:5px 0;flex-wrap:wrap}
+.nums .v{color:var(--txt);font-weight:600}
+.pay{color:var(--green);font-weight:700}
+.pay.hi{color:var(--gold)}
+.dir{margin:7px 0;padding:8px 10px;background:#dafbe1;border:1px solid #aceebb;border-radius:7px;font-size:13px}
+.dir b{color:var(--green);font-size:14px}
+.dir .dprice{color:var(--green);font-weight:700;margin-left:4px}
+.dir .dconf{float:right;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:1px 7px;background:#fff}
+.dir .dbasis{font-size:11px;color:var(--muted);margin-top:3px;clear:both}
+.reason{font-size:12px;color:var(--muted);margin:5px 0;padding:5px 8px;background:var(--bg);border-radius:5px}
+.go{display:inline-block;margin-top:6px;font-size:12px;color:var(--blue);border:1px solid var(--blue);border-radius:6px;padding:4px 10px}
+.go:hover{background:#ddf4ff;text-decoration:none}
+.empty-col{text-align:center;color:var(--muted);padding:30px;font-size:13px;background:#fff;border-radius:8px;border:1px dashed var(--border)}
+
+/* ── 赛前预测 ── */
+.pred-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.pred-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:var(--shadow)}
+.pred-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.pred-match{font-size:15px;font-weight:700;flex:1}
+.pred-ko{font-size:12px;color:var(--muted)}
+.risk-badge{font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600}
+.risk-badge.低{background:#dafbe1;color:var(--green)}
+.risk-badge.中{background:#fff8c5;color:var(--gold)}
+.risk-badge.高{background:#ffebe9;color:var(--red)}
+.pred-dir{font-size:15px;font-weight:700;color:var(--blue);margin:6px 0;padding:8px 10px;background:#ddf4ff;border-radius:6px}
+.pred-reason{font-size:13px;color:var(--muted);line-height:1.6}
+.pred-result{margin-top:8px;font-size:13px;padding:5px 10px;border-radius:5px;font-weight:600}
+.pred-result.won{background:#dafbe1;color:var(--green)}
+.pred-result.lost{background:#ffebe9;color:var(--red)}
+.pred-result.void{background:var(--chip);color:var(--muted)}
+.pred-empty{text-align:center;color:var(--muted);padding:50px;font-size:14px}
+
+/* ── progress ── */
+.pbar{height:8px;background:var(--chip);border-radius:5px;overflow:hidden;margin:8px 0}
+.pbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold))}
+.stage{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.stage .dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;background:var(--muted)}
+.stage.done .dot{background:var(--green)}
+.stage.live .dot{background:var(--gold);box-shadow:0 0 0 4px #9a670030}
+.stage .sname{font-weight:600;font-size:14px}
+.stage .sdate{font-size:12px;color:var(--muted)}
+.stage .sdesc{font-size:12px;color:var(--muted);margin-top:3px}
+.stage .stag{font-size:11px;padding:2px 8px;border-radius:5px;margin-left:auto;white-space:nowrap;font-weight:600}
+.stag.done{background:#dafbe1;color:var(--green)}
+.stag.live{background:#fff8c5;color:var(--gold)}
+.stag.todo{background:var(--chip);color:var(--muted)}
+.rtab{width:100%;border-collapse:collapse;font-size:13px}
+.rtab td{padding:5px 7px;border-bottom:1px solid var(--border)}
+.rtab thead td{color:var(--muted);font-size:11px;background:var(--bg)}
+
+/* ── misc ── */
+footer{padding:16px;color:var(--muted);font-size:11px;text-align:center;border-top:1px solid var(--border);margin-top:20px}
+.loading{text-align:center;color:var(--muted);padding:40px}
+.err{color:var(--red);text-align:center;padding:20px}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
+
 <header>
-  <h1>⚽ 世界杯预测平台 <span style="font-size:12px;color:var(--muted)">2026</span></h1>
-  <div class="meta" id="meta">加载中…</div>
-  <div style="margin-top:4px;font-size:12px;color:var(--muted)">
-    <span id="refreshInfo">自动刷新每30分钟</span>
-    <button id="refreshBtn" style="margin-left:8px;font-size:11px;color:var(--blue);background:none;border:1px solid var(--blue);border-radius:5px;padding:2px 8px;cursor:pointer">立即刷新</button>
+  <div class="hrow1">
+    <h1>⚽ 世界杯预测平台 <span>2026</span></h1>
+    <div class="hlinks">
+      <a class="hlink reg" href="https://polymarket.com/?r=adul" target="_blank" rel="noopener">📝 注册 Polymarket</a>
+      <span class="hcode">邀请码&nbsp;<b>adul</b></span>
+      <a class="hlink" href="https://twitter.com/rich_adul" target="_blank" rel="noopener">𝕏&nbsp;@rich_adul</a>
+      <a class="hlink" href="https://t.me/serene7mc" target="_blank" rel="noopener">✈️&nbsp;Telegram</a>
+    </div>
+  </div>
+  <div class="hrow2">
+    <span id="meta">加载中…</span>
+    <span id="refreshInfo"></span>
+    <button id="refreshBtn">立即刷新</button>
   </div>
 </header>
+
 <div class="wrap">
   <div class="tabs" id="tabs">
     <div class="tab active" data-v="all">全部三榜</div>
-    <div class="tab hide-mobile" data-v="today">📅 今日关注</div>
-    <div class="tab hide-mobile" data-v="low_risk">🛡️ 低风险</div>
-    <div class="tab hide-mobile" data-v="high_risk">🎲 高风险</div>
-    <div class="tab" data-v="analysis">📝 分析</div>
+    <div class="tab hide-m" data-v="today">📅 今日关注</div>
+    <div class="tab hide-m" data-v="low_risk">🛡️ 低风险</div>
+    <div class="tab hide-m" data-v="high_risk">🎲 高风险</div>
+    <div class="tab" data-v="picks">🎯 赛前预测</div>
     <div class="tab" data-v="progress">📅 赛程进度</div>
-    <div class="tab" data-v="review">📒 复盘</div>
-    <div class="tab" data-v="copy">✍️ 文案</div>
   </div>
 
   <!-- 三榜视图 -->
   <div id="boardsView">
     <details class="panel" id="stratPanel">
-      <summary>📖 策略说明（卡片上的策略标签悬停可看）</summary>
-      <div style="margin:8px 14px 4px;padding:10px 12px;background:#0f1e2b;border:1px solid #1e4060;border-radius:8px;font-size:13px;color:#7ec8e3;line-height:1.7">
-        💡 <b style="color:#a8d8f0">Polymarket 实盘特性</b>：与传统博彩不同，Polymarket 的预测市场在比赛全程持续开放，
-        随时可以<b>买入、卖出或平仓</b>。这意味着你可以等到半场数据出来再入场（信息更充分），
-        也可以在比赛过程中获利了结或止损。下方标注「赛中」的策略尤其适合这种打法。
-      </div>
+      <summary>📖 策略说明</summary>
+      <div class="pm-note">💡 <b>Polymarket 支持赛中随时买卖</b>——不只是赛前。以下策略多数是赛前判断，你也可以在中场休息或比赛关键时刻入场。卖出持仓也随时可以。</div>
       <div class="strat-grid" id="stratGrid"></div>
     </details>
     <div class="filters" id="filters"></div>
     <div class="boards" id="boards"><div class="loading">加载中…</div></div>
   </div>
 
-  <!-- 分析文章视图 -->
-  <div id="analysisView" class="hidden"></div>
+  <!-- 赛前预测视图 -->
+  <div id="picksView" class="hidden"></div>
 
   <!-- 进度视图 -->
   <div id="progressView" class="hidden"></div>
-
-  <!-- 复盘视图 -->
-  <div id="reviewView" class="hidden"></div>
-
-  <!-- 文案视图 -->
-  <div id="copyView" class="hidden"></div>
 </div>
+
 <footer id="disclaimer"></footer>
 
 <script>
 const LABEL={today:"📅 今日关注",low_risk:"🛡️ 低风险",high_risk:"🎲 高风险"};
 const BOARD_KEYS=["today","low_risk","high_risk"];
-let DATA=null, STRAT={}, view="all", fLine="all", fType="all";
+let DATA=null,STRAT={},view="all",fLine="all",fType="all";
 
-function fmtNum(n){ if(!n)return"0"; if(n>=1e6)return(n/1e6).toFixed(1)+"M"; if(n>=1e3)return(n/1e3).toFixed(1)+"K"; return Math.round(n);}
-function fmtTime(s){ if(!s)return"--"; const d=new Date(s); return d.toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});}
-function fmtDate(s){ if(!s)return"--"; return s.replaceAll("-","/").slice(5);}
+function fmtNum(n){if(!n)return"0";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return Math.round(n);}
+function fmtTime(s){if(!s)return"--";const d=new Date(s);return d.toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});}
+function fmtDate(s){if(!s)return"--";return s.replaceAll("-","/").slice(5);}
 
-function stratTip(code){ const s=STRAT[code]; return s?`策略${code}·${s.name}：${s.desc}`:`策略${code}`; }
-
-function riskChip(e){
-  const r=e.reason||"";
-  if(r.includes("长赔")) return `<span class="chip risk-high">🎲 长赔</span>`;
-  if(r.includes("摇摆")) return `<span class="chip risk-swing">⚡ 摇摆</span>`;
-  if(r.includes("低风险")) return `<span class="chip risk-low">🛡️ 低风险</span>`;
-  return "";
-}
+function stratTip(code){const s=STRAT[code];return s?`策略${code}·${s.name}：${s.desc}`:`策略${code}`;}
 
 function card(e,i){
   const tags=(e.strategy_tags||[]).map(t=>`<span class="chip s" title="${stratTip(t)}">策略${t}·${(STRAT[t]||{}).name||""}</span>`).join("");
   const isnew=e.is_new?`<span class="chip new">🆕 新上线</span>`:"";
   const pr=e.payoff_ratio;
-  const payClass=pr&&pr>5?"high":"";
+  const payClass=pr&&pr>5?"hi":"";
   const pay=pr?`<span>盈亏比 <span class="pay ${payClass}">${pr}x</span></span>`:"";
   const price=e.price!=null?`<span>概率 <span class="v">${(e.price*100).toFixed(1)}%</span></span>`:"";
   const ko=e.kickoff?`<span>开赛 ${fmtTime(e.kickoff)}</span>`:"";
-  const dir=e.direction?(()=>{
-    const d=e.direction;
-    const dp=d.price!=null?` <span class="dprice">${(d.price*100).toFixed(0)}%</span>`:"";
-    return `<div class="dir" title="${d.basis||''}">🎯 方向：<b>${d.label}</b>${dp}<span class="dconf">信心${d.confidence||'-'}</span><div class="dbasis">${d.basis||''}</div></div>`;
-  })():`<div class="dir none">暂无明确方向（无已验证策略命中）</div>`;
+  const d=e.direction;
+  const dp=d&&d.price!=null?` <span class="dprice">${(d.price*100).toFixed(0)}%</span>`:"";
+  const dir=d
+    ?`<div class="dir"><b>🎯 ${d.label}</b>${dp}<span class="dconf">信心${d.confidence||'-'}</span><div class="dbasis">${d.basis||''}</div></div>`
+    :"";
   return `<div class="card" data-line="${e.line}" data-type="${e.bet_type||'-'}">
-    <div class="top"><span class="rank">#${i+1}</span><span class="title">${e.title}</span></div>
-    <div class="chips"><span class="chip">${e.line}</span><span class="chip">${e.bet_type||"-"}</span>${riskChip(e)}${isnew}${tags}</div>
+    <div class="top"><span class="rank">#${i+1}</span><span class="ctitle">${e.title}</span></div>
+    <div class="chips"><span class="chip">${e.line}</span><span class="chip">${e.bet_type||"-"}</span>${isnew}${tags}</div>
     ${dir}
-    <div class="nums">${price}${pay}<span>成交 <span class="v">${fmtNum(e.volume)}</span></span><span>流动性 <span class="v">${fmtNum(e.liquidity)}</span></span></div>
+    <div class="nums">${price}${pay}<span>成交 <span class="v">${fmtNum(e.volume)}</span></span></div>
     ${ko?`<div class="nums">${ko}</div>`:""}
     <div class="reason">${e.reason||""}</div>
-    <a class="go" href="${e.event_url}" target="_blank" rel="noopener">前往 Polymarket 下注 ↗</a>
+    <a class="go" href="${e.event_url}" target="_blank" rel="noopener">前往 Polymarket ↗</a>
   </div>`;
 }
 
 function matchFilter(e){
-  if(fLine!=="all" && e.line!==fLine) return false;
-  if(fType!=="all" && (e.bet_type||"-")!==fType) return false;
+  if(fLine!=="all"&&e.line!==fLine)return false;
+  if(fType!=="all"&&(e.bet_type||"-")!==fType)return false;
   return true;
 }
 
 function colHtml(key){
   const items=(DATA[key]||[]).filter(matchFilter);
-  return `<div class="col ${key}"><h2>${LABEL[key]}</h2>${items.length?items.map(card).join(""):'<div class="loading">该分类下暂无符合条件的选题</div>'}</div>`;
+  return `<div class="col ${key}"><h2>${LABEL[key]}</h2>${
+    items.length?items.map(card).join(""):'<div class="empty-col">暂无符合条件的选题</div>'}</div>`;
 }
 
 function renderFilters(){
   const all=BOARD_KEYS.flatMap(k=>DATA[k]||[]);
   const types=[...new Set(all.map(e=>e.bet_type||"-"))];
-  const lineChips=[["all","全部"],["单场","单场比赛"],["长盘","赛事长盘"]]
+  const lc=[["all","全部"],["单场","单场比赛"],["长盘","赛事长盘"]]
     .map(([v,t])=>`<span class="fchip ${fLine===v?'active':''}" data-f="line" data-v="${v}">${t}</span>`).join("");
-  const typeChips=`<span class="fchip ${fType==='all'?'active':''}" data-f="type" data-v="all">全部盘口</span>`+
+  const tc=`<span class="fchip ${fType==="all"?'active':''}" data-f="type" data-v="all">全部盘口</span>`+
     types.map(t=>`<span class="fchip ${fType===t?'active':''}" data-f="type" data-v="${t}">${t}</span>`).join("");
-  document.getElementById("filters").innerHTML=
-    `<span class="lbl">类型：</span>${lineChips}<span class="lbl" style="margin-left:8px">盘口：</span>${typeChips}`;
+  document.getElementById("filters").innerHTML=`<span class="lbl">类型：</span>${lc}<span class="lbl" style="margin-left:8px">盘口：</span>${tc}`;
 }
 
 function renderBoards(){
@@ -218,34 +251,37 @@ function renderBoards(){
 }
 
 function renderStrategies(){
-  const timingColor={"赛前":"#3d7acc","赛中":"#c96b15","赛前/赛中":"#7a5ea8"};
   document.getElementById("stratGrid").innerHTML=
-    Object.entries(STRAT).map(([k,s])=>{
-      const tc=timingColor[s.timing]||"#555";
-      const tb=s.timing?`<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:${tc}22;color:${tc};border:1px solid ${tc}44;margin-left:5px">${s.timing}</span>`:"";
-      return `<div class="strat"><b>策略${k}·${s.name}</b>${tb}<br><span style="color:#8b949e">${s.desc}</span></div>`;
-    }).join("");
+    Object.entries(STRAT).map(([k,s])=>`<div class="strat"><b>策略${k}·${s.name}</b>${s.desc}</div>`).join("");
 }
 
-async function renderAnalysis(){
-  const av=document.getElementById("analysisView");
-  av.innerHTML='<div class="loading">加载中…</div>';
+async function renderPicks(){
+  const pv=document.getElementById("picksView");
+  pv.innerHTML='<div class="loading">加载中…</div>';
   try{
-    const d=await (await fetch("/posts")).json();
-    if(!d.posts||!d.posts.length){
-      av.innerHTML='<div class="loading" style="color:var(--muted)">暂无分析文章</div>';
+    const d=await (await fetch("/predictions")).json();
+    if(!d.predictions||!d.predictions.length){
+      pv.innerHTML='<div class="pred-empty">📭 还没有赛前预测，敬请期待</div>';
       return;
     }
-    av.innerHTML=d.posts.map(p=>`
-      <div class="post-card">
-        <div class="post-meta">
-          <span class="post-type">${p.type}</span>
-          <span>${fmtTime(p.published_ts)}</span>
+    const cards=d.predictions.map(p=>{
+      const ko=p.kickoff?`<span class="pred-ko">${fmtTime(p.kickoff)}</span>`:"";
+      const res=p.result
+        ?`<div class="pred-result ${p.result==='命中'?'won':p.result==='未命中'?'lost':'void'}">${
+            p.result==='命中'?'✅ 命中':p.result==='未命中'?'❌ 未命中':'— 无效'}</div>`:"";
+      return `<div class="pred-card">
+        <div class="pred-head">
+          <span class="pred-match">${p.match}</span>
+          ${ko}
+          <span class="risk-badge ${p.risk_level}">${p.risk_level}风险</span>
         </div>
-        ${p.title?`<div class="post-title">${p.title}</div>`:""}
-        <div class="post-body">${p.content.replace(/</g,'&lt;')}</div>
-      </div>`).join("");
-  }catch(err){ av.innerHTML=`<div class="err">加载失败：${err.message}</div>`; }
+        <div class="pred-dir">🎯 ${p.direction}</div>
+        ${p.reasoning?`<div class="pred-reason">${p.reasoning}</div>`:""}
+        ${res}
+      </div>`;
+    }).join("");
+    pv.innerHTML=`<div class="pred-grid">${cards}</div>`;
+  }catch(err){pv.innerHTML=`<div class="err">加载失败：${err.message}</div>`;}
 }
 
 async function renderProgress(){
@@ -263,151 +299,62 @@ async function renderProgress(){
         <span class="stag ${tag}">${s.status}</span></div>`;
     }).join("");
     const st=await (await fetch("/standings")).json();
-    const stColor=s=>s==="已出线"?"#7ee787":s==="已淘汰"?"#888":s==="小组赛中"?"#e3b341":"var(--muted)";
-    const groupsHtml=Object.entries(st.groups).map(([g,rows])=>{
+    const sc=s=>s==="已出线"?"var(--green)":s==="已淘汰"?"var(--muted)":s==="小组赛中"?"var(--gold)":"var(--muted)";
+    const gh=Object.entries(st.groups).map(([g,rows])=>{
       const tr=rows.map(r=>`<tr><td>${r.rank||"-"}</td><td>${r.team}${r.is_host?"🏠":""}</td>
         <td>${r.played}</td><td>${r.w}/${r.d}/${r.l}</td><td>${r.gf-r.ga>0?"+":""}${r.gf-r.ga}</td>
-        <td><b>${r.pts}</b></td><td style="color:${stColor(r.status)}">${r.status}</td></tr>`).join("");
+        <td><b>${r.pts}</b></td><td style="color:${sc(r.status)}">${r.status}</td></tr>`).join("");
       return `<div class="panel" style="padding:10px"><div style="font-weight:600;margin-bottom:6px">${g}组</div>
-        <table style="width:100%;font-size:12px;border-collapse:collapse">
-        <thead><tr style="color:var(--muted)"><td>名</td><td>队</td><td>赛</td><td>胜平负</td><td>净</td><td>分</td><td>状态</td></tr></thead>
+        <table class="rtab"><thead><tr><td>名</td><td>队</td><td>赛</td><td>W/D/L</td><td>净</td><td>分</td><td>状态</td></tr></thead>
         <tbody>${tr}</tbody></table></div>`;
     }).join("");
-    pv.innerHTML=`<div class="panel" style="padding:14px">
-        <div style="font-size:15px;font-weight:600">当前阶段：<span style="color:var(--gold)">${p.current_stage}</span>
-          <span style="float:right;color:var(--muted);font-size:13px">整体进度 ${p.overall_percent}%（${p.today}）</span></div>
-        <div class="pbar"><i style="width:${p.overall_percent}%"></i></div>
-      </div><div class="timeline">${stages}</div>
-      <h2 style="margin:16px 0 8px">📊 小组积分榜 ${st.last_updated?'<span style="font-size:12px;color:var(--muted)">·更新于'+fmtTime(st.last_updated)+'</span>':'<span style="font-size:12px;color:var(--muted)">·赛事未开始</span>'}</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">${groupsHtml}</div>`;
-  }catch(err){ pv.innerHTML=`<div class="err">进度加载失败：${err.message}</div>`; }
+    pv.innerHTML=`<div class="panel" style="padding:14px;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:700">当前阶段：<span style="color:var(--gold)">${p.current_stage}</span>
+        <span style="float:right;color:var(--muted);font-size:12px">进度 ${p.overall_percent}%</span></div>
+      <div class="pbar"><i style="width:${p.overall_percent}%"></i></div></div>
+      <div style="margin-bottom:14px">${stages}</div>
+      <h2 style="margin-bottom:10px;font-size:15px">📊 小组积分榜</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">${gh}</div>`;
+  }catch(err){pv.innerHTML=`<div class="err">加载失败：${err.message}</div>`;}
 }
 
 function switchView(){
-  const isProg=view==="progress", isRev=view==="review", isCopy=view==="copy", isAna=view==="analysis";
-  document.getElementById("boardsView").classList.toggle("hidden",isProg||isRev||isCopy||isAna);
-  document.getElementById("analysisView").classList.toggle("hidden",!isAna);
-  document.getElementById("progressView").classList.toggle("hidden",!isProg);
-  document.getElementById("reviewView").classList.toggle("hidden",!isRev);
-  document.getElementById("copyView").classList.toggle("hidden",!isCopy);
-  if(isProg) renderProgress();
-  else if(isRev) renderReview();
-  else if(isCopy) renderCopy();
-  else if(isAna) renderAnalysis();
+  const isBoards=["all","today","low_risk","high_risk"].includes(view);
+  document.getElementById("boardsView").classList.toggle("hidden",!isBoards);
+  document.getElementById("picksView").classList.toggle("hidden",view!=="picks");
+  document.getElementById("progressView").classList.toggle("hidden",view!=="progress");
+  if(view==="picks") renderPicks();
+  else if(view==="progress") renderProgress();
   else renderBoards();
 }
-
-async function renderCopy(){
-  const cv=document.getElementById("copyView");
-  cv.innerHTML='<div class="loading">生成文案中…</div>';
-  try{
-    const d=await (await fetch("/copy")).json();
-    cv.innerHTML=d.pieces.map((p,i)=>`
-      <div class="panel" style="padding:14px;margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <h2 style="margin:0">✍️ ${p.type}</h2>
-          <button class="mini add" onclick="copyText(${i})">复制</button>
-        </div>
-        <pre id="copytext${i}" style="white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.6;margin:0;background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:10px">${p.text.replace(/</g,'&lt;')}</pre>
-      </div>`).join("");
-    window._copyPieces=d.pieces;
-  }catch(err){ cv.innerHTML=`<div class="err">文案生成失败：${err.message}</div>`; }
-}
-function copyText(i){
-  const t=(window._copyPieces||[])[i]; if(!t)return;
-  navigator.clipboard.writeText(t.text).then(()=>{
-    const btns=document.querySelectorAll("#copyView .mini"); if(btns[i]){btns[i].textContent="已复制✓";setTimeout(()=>btns[i].textContent="复制",1500);}
-  });
-}
-
-async function renderReview(){
-  const rv=document.getElementById("reviewView");
-  rv.innerHTML='<div class="loading">加载中…</div>';
-  try{
-    const pred=await (await fetch("/review/predictions")).json();
-    const o=pred.overall;
-    const byS=Object.entries(pred.by_strategy).map(([k,v])=>
-      `<tr><td>策略${k}</td><td>${v['命中']}/${v['样本']}</td><td><b>${v['命中率']!=null?v['命中率']+'%':'-'}</b></td></tr>`).join("")
-      ||`<tr><td colspan="3" style="color:var(--muted)">暂无已结算预测</td></tr>`;
-    const bets=await (await fetch("/bets")).json();
-    const su=bets.summary;
-    const betRows=bets.bets.map(b=>{
-      const st={open:'<span style="color:#e3b341">进行中</span>',won:'<span style="color:#7ee787">赢</span>',lost:'<span style="color:#f85149">输</span>',void:'<span style="color:var(--muted)">无效</span>'}[b.status]||b.status;
-      const acts=b.status==='open'
-        ?`<button onclick="settleBet(${b.id},'won')" class="mini">赢</button> <button onclick="settleBet(${b.id},'lost')" class="mini">输</button>`
-        :`<span>${b.pnl>0?'+':''}${b.pnl||0}</span>`;
-      return `<tr><td>${b.title}</td><td>${b.direction}</td><td>${b.stake}</td><td>${b.price!=null?(b.price*100).toFixed(0)+'%':'-'}</td><td>${st}</td><td>${acts} <button onclick="delBet(${b.id})" class="mini del">×</button></td></tr>`;
-    }).join("")||`<tr><td colspan="6" style="color:var(--muted)">还没有记录下注</td></tr>`;
-    rv.innerHTML=`
-      <div class="panel" style="padding:14px">
-        <h2 style="margin:0 0 8px">🎯 平台预测命中率</h2>
-        <div style="font-size:14px;margin-bottom:8px">总体：命中 <b>${o['命中']}</b>/${o['样本']} ·
-          命中率 <b style="color:#7ee787">${o['命中率']!=null?o['命中率']+'%':'—'}</b>
-          <span style="color:var(--muted)">（待结算 ${pred.pending}）</span></div>
-        <table class="rtab"><thead><tr><td>策略</td><td>命中/样本</td><td>命中率</td></tr></thead><tbody>${byS}</tbody></table>
-      </div>
-      <div class="panel" style="padding:14px;margin-top:12px">
-        <h2 style="margin:0 0 8px">📒 我的下注复盘</h2>
-        <div style="font-size:13px;margin-bottom:8px;color:var(--muted)">
-          ${su['总注数']}注 · 投入${su['总投入']} · 胜率${su['胜率']!=null?su['胜率']+'%':'—'} ·
-          总盈亏 <b style="color:${(su['总盈亏']||0)>=0?'#7ee787':'#f85149'}">${(su['总盈亏']||0)>0?'+':''}${su['总盈亏']||0}</b></div>
-        <div class="betform">
-          <input id="bTitle" placeholder="事件(如 墨西哥对南非)" style="flex:2">
-          <input id="bDir" placeholder="方向(押墨西哥胜)" style="flex:2">
-          <input id="bStake" type="number" placeholder="投入" style="flex:1">
-          <input id="bPrice" type="number" step="0.01" placeholder="赔率0-1" style="flex:1">
-          <button onclick="addBet()" class="mini add">记录</button>
-        </div>
-        <table class="rtab" style="margin-top:10px"><thead><tr><td>事件</td><td>方向</td><td>投入</td><td>赔率</td><td>状态</td><td>操作</td></tr></thead><tbody>${betRows}</tbody></table>
-      </div>`;
-  }catch(err){ rv.innerHTML=`<div class="err">复盘加载失败：${err.message}</div>`; }
-}
-async function addBet(){
-  const t=document.getElementById("bTitle").value.trim();
-  const dir=document.getElementById("bDir").value.trim();
-  const stake=parseFloat(document.getElementById("bStake").value);
-  const price=parseFloat(document.getElementById("bPrice").value);
-  if(!t||!dir||!stake){alert("请填事件/方向/投入");return;}
-  await fetch("/bets",{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({title:t,direction:dir,stake:stake,price:isNaN(price)?null:price})});
-  renderReview();
-}
-async function settleBet(id,status){
-  await fetch(`/bets/${id}/settle`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});
-  renderReview();
-}
-async function delBet(id){ await fetch(`/bets/${id}`,{method:"DELETE"}); renderReview(); }
 
 async function updateRefreshInfo(){
   try{
     const s=await (await fetch("/refresh-status")).json();
-    const ok=s.last_ok?`✓ 已刷新${s.runs}次`:(s.last_error?`⚠️ 上次失败:${s.last_error}`:"");
+    const ok=s.last_ok?`✓ 已刷新${s.runs}次`:(s.last_error?`⚠ 上次失败`:"");
     document.getElementById("refreshInfo").textContent=`自动刷新每${s.interval_min}分钟 · ${ok}`;
   }catch(e){}
 }
+
 document.getElementById("refreshBtn").addEventListener("click",async function(){
-  const b=this; b.disabled=true; b.textContent="刷新中…";
-  try{ await fetch("/refresh",{method:"POST"}); await load(); }
-  catch(e){}
-  b.disabled=false; b.textContent="立即刷新";
+  const b=this;b.disabled=true;b.textContent="刷新中…";
+  try{await fetch("/refresh",{method:"POST"});await load();}catch(e){}
+  b.disabled=false;b.textContent="立即刷新";
 });
 
 async function load(){
   try{
-    [STRAT] = [await (await fetch("/strategies")).json()];
+    [STRAT]=[await (await fetch("/strategies")).json()];
     renderStrategies();
-    DATA=await (await fetch("/boards?top_n=15")).json();
+    DATA=await (await fetch("/boards?top_n=20")).json();
     const m=DATA.meta||{};
-    const sample=(DATA.today[0]||DATA.low_risk[0]||DATA.high_risk[0]||{}).snapshot_ts;
-    document.getElementById("meta").innerHTML=`共 <b>${m.total_topics||0}</b> 个预测选题 · 数据时间 ${fmtTime(sample)} · 今日 ${m.today||""}`;
+    const s=(DATA.today[0]||DATA.low_risk[0]||DATA.high_risk[0]||{}).snapshot_ts;
+    document.getElementById("meta").innerHTML=`共 <b>${m.total_topics||0}</b> 个选题 · 更新 ${fmtTime(s)}`;
     updateRefreshInfo();
-    document.getElementById("disclaimer").textContent=(m.disclaimer||"")+" · 数据来源 Polymarket";
-    renderFilters(); renderBoards();
-    if(location.hash==="#progress"){ view="progress";
-      document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.v==="progress"));
-      switchView(); }
+    document.getElementById("disclaimer").textContent=(m.disclaimer||"")+" · 数据来源 Polymarket · 不构成投资建议";
+    renderFilters();renderBoards();
   }catch(err){
-    document.getElementById("boards").innerHTML=`<div class="err">数据加载失败：${err.message}<br>请确认数据管道已运行（python -m wcp.pipeline）</div>`;
+    document.getElementById("boards").innerHTML=`<div class="err">数据加载失败：${err.message}</div>`;
   }
 }
 
@@ -418,9 +365,9 @@ document.getElementById("tabs").addEventListener("click",e=>{
   switchView();
 });
 document.getElementById("filters").addEventListener("click",e=>{
-  const f=e.target.dataset.f; if(!f)return;
-  if(f==="line") fLine=e.target.dataset.v; else fType=e.target.dataset.v;
-  renderFilters(); renderBoards();
+  const f=e.target.dataset.f;if(!f)return;
+  if(f==="line")fLine=e.target.dataset.v;else fType=e.target.dataset.v;
+  renderFilters();renderBoards();
 });
 load();
 </script>

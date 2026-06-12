@@ -88,16 +88,22 @@ def _interest(t):
 # ══════════════════════════════════════════════════════
 
 def score_today(t, today: str | None = None) -> tuple[float, str]:
-    """📅 今日关注：今天开赛的比赛，按策略质量排序。
-    今天有比赛就入榜，没有策略的场次也收录（用户需要知道今天有什么赛）。"""
+    """📅 今日关注：今天开赛且尚未结束（开球后 <2h）的比赛，按策略质量排序。"""
     td = today or _today_str()
     kickoff = t.get("kickoff") or ""
     if not kickoff.startswith(td):
         return 0.0, ""
+    # 比赛开始超过 2 小时视为已结束，不再展示
+    try:
+        ko_dt = datetime.fromisoformat(kickoff.replace("Z", "+00:00"))
+        if (datetime.now(timezone.utc) - ko_dt).total_seconds() > 7200:
+            return 0.0, ""
+    except (ValueError, TypeError):
+        pass
     tags = t.get("strategy_tags") or []
     strat = min(1.0, len(tags) / 3.0)
     score = 0.50 + 0.50 * strat
-    reason = f"今日开赛{'（策略 ' + '/'.join(tags) + '）' if tags else '（无策略匹配，仅记录）'}"
+    reason = f"今日开赛·策略 {'·'.join(tags) if tags else '无'}"
     return round(score, 4), reason
 
 

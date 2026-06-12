@@ -1,4 +1,4 @@
-"""后台管理：手写内容提交 → 优化 → 发布到网站。
+"""后台管理：赛前预测 + 分析文章 提交/发布。
 
 工作流：
   1. POST /admin/posts       提交原始内容（AI 生成原稿）→ 自动基础清洗，存为 draft
@@ -125,6 +125,100 @@ def delete_post(post_id: int):
     conn = db.connect()
     try:
         conn.execute("DELETE FROM posts WHERE id=?", (post_id,))
+        conn.commit()
+        return {"ok": True}
+    finally:
+        conn.close()
+
+
+# ══════════════════════════════════════════════
+# 赛前预测
+# ══════════════════════════════════════════════
+
+class PredictionIn(BaseModel):
+    match: str                   # "法国 vs 摩洛哥"
+    kickoff: str = ""            # "2026-06-12T20:00:00Z"
+    direction: str               # "押法国赢"
+    reasoning: str = ""
+    risk_level: str = "中"       # 低 / 中 / 高
+
+
+class PredictionUpdate(BaseModel):
+    direction: str | None = None
+    reasoning: str | None = None
+    risk_level: str | None = None
+    result: str | None = None    # 命中 / 未命中 / 无效
+    status: str | None = None    # active / settled
+    published: int | None = None
+
+
+@router.get("/predictions")
+def public_predictions(limit: int = 30):
+    """公开接口：所有已发布的赛前预测（前台展示）。"""
+    conn = db.connect()
+    try:
+        rows = [dict(r) for r in conn.execute(
+            "SELECT * FROM predictions WHERE published=1"
+            " ORDER BY kickoff DESC, created_ts DESC LIMIT ?",
+            (limit,)).fetchall()]
+        return {"count": len(rows), "predictions": rows}
+    finally:
+        conn.close()
+
+
+@router.post("/admin/predictions")
+def create_prediction(p: PredictionIn):
+    ts = datetime.now(timezone.utc).isoformat()
+    conn = db.connect()
+    try:
+        cur = conn.execute(
+            "INSERT INTO predictions(match,kickoff,direction,reasoning,risk_level,status,published,created_ts)"
+            " VALUES(?,?,?,?,?,?,?,?)",
+            (p.match, p.kickoff, p.direction, p.reasoning, p.risk_level, "active", 1, ts))
+        conn.commit()
+        return {"ok": True, "id": cur.lastrowid}
+    finally:
+        conn.close()
+
+
+@router.get("/admin/predictions")
+def list_predictions():
+    conn = db.connect()
+    try:
+        rows = [dict(r) for r in conn.execute(
+            "SELECT * FROM predictions ORDER BY kickoff DESC, created_ts DESC").fetchall()]
+        return {"count": len(rows), "predictions": rows}
+    finally:
+        conn.close()
+
+
+@router.patch("/admin/predictions/{pred_id}")
+def update_prediction(pred_id: int, u: PredictionUpdate):
+    conn = db.connect()
+    try:
+        if not conn.execute("SELECT id FROM predictions WHERE id=?", (pred_id,)).fetchone():
+            raise HTTPException(404, "预测不存在")
+        sets, vals = [], []
+        for field, val in [("direction", u.direction), ("reasoning", u.reasoning),
+                           ("risk_level", u.risk_level), ("result", u.result),
+                           ("status", u.status), ("published", u.published)]:
+            if val is not None:
+                sets.append(f"{field}=?"); vals.append(val)
+        if not sets:
+            return {"ok": True, "changed": 0}
+        vals.append(pred_id)
+        conn.execute(f"UPDATE predictions SET {','.join(sets)} WHERE id=?", vals)
+        conn.commit()
+        return {"ok": True, "id": pred_id}
+    finally:
+        conn.close()
+
+
+@router.delete("/admin/predictions/{pred_id}")
+def delete_prediction(pred_id: int):
+    conn = db.connect()
+    try:
+        conn.execute("DELETE FROM predictions WHERE id=?", (pred_id,))
         conn.commit()
         return {"ok": True}
     finally:

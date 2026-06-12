@@ -1,5 +1,10 @@
 """三榜生成：今日关注 / 低风险 / 高风险。
 
+过滤原则（2026-06-12 更新）：
+  1. 所有榜单只展示有明确方向（direction 非 None）的选题
+  2. 单场盘只展示胜平负(1X2)和综合盘(含O/U/让球)，其余衍生盘不展示
+  3. 已结束比赛（开球 >2h 前）不在今日关注出现（scoring 层控制）
+
 风险分类逻辑（见 3_策略分析库/三榜规则与展示规范.md）：
   今日关注：时间轴，今天开赛的比赛（主区）
   低风险：主张 ≤ 队伍地板（强队确定性/东道主/已出线保守）
@@ -10,7 +15,12 @@
 import json
 from datetime import datetime, timezone
 
+from datetime import datetime, timezone
+
 from . import db, scoring, glossary
+
+# 单场盘口白名单：只展示胜平负和综合盘（含大小球/让球）
+_SINGLE_ALLOWED = {"1X2", "综合(含O/U/让球/BTTS)"}
 
 
 def _load_topics(conn):
@@ -52,9 +62,14 @@ def _entry(t, score, reason):
 
 def _rank(topics, scorer, top_n, max_per_match=2, max_per_type=4):
     """评分排序 + 多样性控制。
-    注意：多样性控制不剔除低流动——低流动是新上线选题的正常状态，绝不过滤。"""
+    前置过滤：① 必须有明确方向；② 单场只看胜平负/综合盘。"""
     scored = []
     for t in topics:
+        if not t.get("direction"):          # 无方向不上榜
+            continue
+        if (t.get("line") == "单场"
+                and t.get("bet_type") not in _SINGLE_ALLOWED):
+            continue
         s, reason = scorer(t)
         if s > 0:
             e = _entry(t, s, reason)
