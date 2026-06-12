@@ -120,6 +120,11 @@
   <div id="boardsView">
     <details class="panel" id="stratPanel">
       <summary>📖 策略说明（卡片上的策略标签悬停可看）</summary>
+      <div style="margin:8px 14px 4px;padding:10px 12px;background:#0f1e2b;border:1px solid #1e4060;border-radius:8px;font-size:13px;color:#7ec8e3;line-height:1.7">
+        💡 <b style="color:#a8d8f0">Polymarket 实盘特性</b>：与传统博彩不同，Polymarket 的预测市场在比赛全程持续开放，
+        随时可以<b>买入、卖出或平仓</b>。这意味着你可以等到半场数据出来再入场（信息更充分），
+        也可以在比赛过程中获利了结或止损。下方标注「赛中」的策略尤其适合这种打法。
+      </div>
       <div class="strat-grid" id="stratGrid"></div>
     </details>
     <div class="filters" id="filters"></div>
@@ -213,8 +218,13 @@ function renderBoards(){
 }
 
 function renderStrategies(){
+  const timingColor={"赛前":"#3d7acc","赛中":"#c96b15","赛前/赛中":"#7a5ea8"};
   document.getElementById("stratGrid").innerHTML=
-    Object.entries(STRAT).map(([k,s])=>`<div class="strat"><b>策略${k}·${s.name}</b>：${s.desc}</div>`).join("");
+    Object.entries(STRAT).map(([k,s])=>{
+      const tc=timingColor[s.timing]||"#555";
+      const tb=s.timing?`<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:${tc}22;color:${tc};border:1px solid ${tc}44;margin-left:5px">${s.timing}</span>`:"";
+      return `<div class="strat"><b>策略${k}·${s.name}</b>${tb}<br><span style="color:#8b949e">${s.desc}</span></div>`;
+    }).join("");
 }
 
 async function renderAnalysis(){
