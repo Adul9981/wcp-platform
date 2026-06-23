@@ -127,6 +127,7 @@ footer{padding:20px 16px;color:var(--muted);font-size:12px;text-align:center;bor
       <a class="cta-btn cta-tg" href="#" id="ctaTg" target="_blank">✈ 加入 Telegram 群</a>
       <a class="cta-btn cta-qq" href="#" id="ctaQq" target="_blank">💬 加入 QQ 群</a>
       <a class="cta-btn cta-pm" href="https://polymarket.com/?r=adul" target="_blank" rel="noopener">🔗 注册 Polymarket</a>
+      <a class="cta-btn" id="pmGuide" href="#" target="_blank" rel="noopener" style="display:none;border:1.5px solid var(--gold);color:var(--gold);background:#fff">📖 Polymarket 操作指南</a>
     </div>
     <div class="invite">Polymarket 邀请码：<b>adul</b>（注册时填入）</div>
   </div>
@@ -195,9 +196,18 @@ async function loadConfig(){
       document.getElementById("hTg").href = cfg.tg_link;
       document.getElementById("ctaTg").href = cfg.tg_link;
     }
-    if(cfg.qq_link){
-      document.getElementById("hQq").href = cfg.qq_link;
-      document.getElementById("ctaQq").href = cfg.qq_link;
+    if(cfg.qq_number){
+      const qqHint = `QQ群：${cfg.qq_number}（在QQ内搜索加入）`;
+      document.getElementById("hQq").textContent = `💬 QQ ${cfg.qq_number}`;
+      document.getElementById("hQq").removeAttribute("href");
+      document.getElementById("hQq").style.cursor = "default";
+      document.getElementById("ctaQq").textContent = `💬 QQ群 ${cfg.qq_number}`;
+      document.getElementById("ctaQq").removeAttribute("href");
+      document.getElementById("ctaQq").onclick = ()=>{ alert(`QQ群号：${cfg.qq_number}\n请在QQ内搜索群号加入`); };
+    }
+    if(cfg.polymarket_guide){
+      const guideEl = document.getElementById("pmGuide");
+      if(guideEl){ guideEl.href = cfg.polymarket_guide; guideEl.style.display = "inline-flex"; }
     }
   }catch(e){}
 }

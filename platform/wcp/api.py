@@ -218,8 +218,9 @@ def get_public_config():
     import os
     return {
         "tg_link": os.environ.get("TG_GROUP_LINK", ""),
-        "qq_link": os.environ.get("QQ_GROUP_LINK", ""),
+        "qq_number": os.environ.get("QQ_GROUP_NUMBER", ""),
         "polymarket_link": "https://polymarket.com/?r=adul",
+        "polymarket_guide": os.environ.get("POLYMARKET_GUIDE", ""),
         "invite_code": "adul",
         "twitter": "https://x.com/rich_adul",
     }
