@@ -99,18 +99,23 @@ CREATE TABLE IF NOT EXISTS posts (
     published_ts TEXT
 );
 
--- 赛前预测：用户每天手动输入，前端按日期展示
+-- 赛前预测：手动输入或 AI 自动生成，前端按日期展示
 CREATE TABLE IF NOT EXISTS predictions (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    match_name  TEXT NOT NULL,
-    kickoff     TEXT,
-    content     TEXT NOT NULL,
-    status      TEXT DEFAULT 'active',
-    published   INTEGER DEFAULT 1,
-    created_ts  TEXT,
-    updated_ts  TEXT
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    match_name   TEXT NOT NULL,
+    kickoff      TEXT,
+    content      TEXT NOT NULL,
+    status       TEXT DEFAULT 'active',
+    published    INTEGER DEFAULT 1,
+    is_auto      INTEGER DEFAULT 0,   -- 1=AI自动生成
+    day_num      INTEGER,             -- 世界杯第N天
+    matches_json TEXT,                -- 赛程JSON（自动模式用，供结果查询）
+    result_text  TEXT,                -- 赛后评估文本（自动填充）
+    created_ts   TEXT,
+    updated_ts   TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_pred_created ON predictions(created_ts);
+CREATE INDEX IF NOT EXISTS idx_pred_auto ON predictions(is_auto, created_ts);
 
 -- 复盘B：用户下注日志（手动记录操作）
 CREATE TABLE IF NOT EXISTS bet_log (
@@ -137,10 +142,27 @@ def connect():
     return conn
 
 
+def _migrate(conn):
+    """为已有数据库添加新字段（幂等，字段已存在时静默跳过）。"""
+    new_cols = [
+        ("predictions", "is_auto",      "INTEGER DEFAULT 0"),
+        ("predictions", "day_num",      "INTEGER"),
+        ("predictions", "matches_json", "TEXT"),
+        ("predictions", "result_text",  "TEXT"),
+    ]
+    for table, col, typedef in new_cols:
+        try:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {typedef}")
+        except Exception:
+            pass
+    conn.commit()
+
+
 def init_db(conn=None):
     own = conn is None
     conn = conn or connect()
     conn.executescript(SCHEMA)
+    _migrate(conn)
     conn.commit()
     if own:
         conn.close()

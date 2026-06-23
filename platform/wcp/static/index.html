@@ -41,6 +41,16 @@
   .pred-body ul{margin:4px 0 4px 18px}
   .pred-body li{margin:2px 0}
   .pred-label{font-weight:700;color:var(--txt)}
+  /* Auto predictions */
+  .auto-pred-post{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .auto-pred-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .auto-badge{font-size:11px;padding:3px 10px;border-radius:20px;background:#eff6ff;color:#1d4ed8;font-weight:600}
+  .auto-day{font-size:15px;font-weight:700}
+  .auto-pred-body{font-size:13px;color:#374151;line-height:1.9;white-space:pre-wrap}
+  .auto-pred-body p{margin:2px 0}
+  .auto-result-sep{margin:16px 0;border:none;border-top:2px dashed var(--border)}
+  .auto-result-body{font-size:13px;color:#374151;line-height:1.9;background:#f0fdf4;border-radius:8px;padding:12px 14px;white-space:pre-wrap}
+  .auto-result-body p{margin:2px 0}
   /* Tabs */
   .tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;border-bottom:2px solid var(--border);padding-bottom:0}
   .tab{padding:9px 18px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-2px;border-radius:6px 6px 0 0;transition:.15s}
@@ -234,15 +244,44 @@ async function renderPredictions(){
   try{
     const d=await(await fetch("/predictions")).json();
     if(!d.predictions||!d.predictions.length){sec.innerHTML="";return;}
-    const cards=d.predictions.map(p=>`<div class="pred-card">
-      <div class="pred-match">⚽ ${p.match_name}</div>
-      ${p.kickoff?`<div class="pred-time">开赛：${fmtTime(p.kickoff)}</div>`:""}
-      <div class="pred-body">${formatContent(p.content)}</div>
-    </div>`).join("");
-    sec.innerHTML=`<div class="pred-section">
-      <div class="pred-section-title">📋 今日赛前预测 <span style="font-size:12px;font-weight:400;color:var(--muted)">（作者手动更新）</span></div>
-      <div class="pred-grid">${cards}</div>
-    </div>`;
+
+    // 分开自动和手动预测
+    const auto=d.predictions.filter(p=>p.is_auto===1||p.is_auto==="1"||p.is_auto===true);
+    const manual=d.predictions.filter(p=>!p.is_auto);
+
+    let html="";
+
+    // 自动生成：全宽块状展示
+    if(auto.length){
+      const posts=auto.map(p=>{
+        const hasResult=p.result_text&&p.result_text.trim();
+        return`<div class="auto-pred-post">
+          <div class="auto-pred-head">
+            <span class="auto-badge">🤖 AI 自动预测</span>
+            <span class="auto-day">${p.match_name||""}</span>
+            <span style="font-size:11px;color:var(--muted);margin-left:auto">${fmtTime(p.updated_ts||p.created_ts)}</span>
+          </div>
+          <div class="auto-pred-body">${formatContent(p.content)}</div>
+          ${hasResult?`<div class="auto-result-sep"></div><div class="auto-result-body">${formatContent(p.result_text)}</div>`:""}
+        </div>`;
+      }).join("");
+      html+=`<div class="pred-section">${posts}</div>`;
+    }
+
+    // 手动：卡片网格
+    if(manual.length){
+      const cards=manual.map(p=>`<div class="pred-card">
+        <div class="pred-match">⚽ ${p.match_name}</div>
+        ${p.kickoff?`<div class="pred-time">开赛：${fmtTime(p.kickoff)}</div>`:""}
+        <div class="pred-body">${formatContent(p.content)}</div>
+      </div>`).join("");
+      html+=`<div class="pred-section">
+        <div class="pred-section-title">📋 手动预测 <span style="font-size:12px;font-weight:400;color:var(--muted)">（作者添加）</span></div>
+        <div class="pred-grid">${cards}</div>
+      </div>`;
+    }
+
+    sec.innerHTML=html;
   }catch(e){sec.innerHTML="";}
 }
 

@@ -91,6 +91,20 @@ textarea{min-height:140px;resize:vertical;line-height:1.6}
 </header>
 <div class="wrap">
 
+  <!-- ══ AI 自动化 ══ -->
+  <div class="section">
+    <div class="section-head">
+      <h2>🤖 AI 全自动化</h2>
+      <span id="autoStatus" class="badge badge-draft">就绪</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn btn-primary" onclick="runAutoPredict()">🤖 一键生成今日预测</button>
+      <button class="btn btn-pub" onclick="runUpdateResults()">📊 更新今日比赛结果</button>
+    </div>
+    <div id="autoLog" style="font-size:12px;color:var(--muted);font-family:monospace;min-height:44px;padding:10px 12px;background:var(--bg);border-radius:6px;border:1px solid var(--border);white-space:pre-wrap;line-height:1.6">点击按钮开始，日志显示在这里…</div>
+    <div style="margin-top:8px;font-size:11px;color:var(--muted)">自动定时：每天 08:00 UTC（北京16:00）生成预测，23:30 UTC 更新结果。也可手动触发。</div>
+  </div>
+
   <!-- 文风指南 -->
   <details class="guide">
     <summary>📋 文风指南（提交前参考，去 AI 味）</summary>
@@ -210,6 +224,58 @@ textarea{min-height:140px;resize:vertical;line-height:1.6}
 
 <script>
 let editingId=null, settlingId=null;
+
+// ── AI 自动化 ────────────────────────────
+function setAutoStatus(txt, cls){
+  const el=document.getElementById("autoStatus");
+  el.textContent=txt; el.className="badge "+cls;
+}
+function setAutoLog(msg){ document.getElementById("autoLog").textContent=msg; }
+
+async function runAutoPredict(){
+  setAutoStatus("运行中…","badge-active");
+  setAutoLog("正在请求 Grok 搜索今日赛程并生成预测，约需 30–60 秒…");
+  try{
+    const r=await fetch("/admin/auto-predict",{method:"POST"});
+    const d=await r.json();
+    if(d.ok){
+      if(d.status==="no_matches"){
+        setAutoLog("今日无世界杯比赛，无需生成预测。");
+        setAutoStatus("完成","badge-draft");
+      }else{
+        setAutoLog(`✅ 预测已生成并发布！\n比赛场数：${d.matches}｜记录 ID：#${d.id}｜日期：${d.date}`);
+        setAutoStatus("完成","badge-pub");
+        loadPredictions();
+      }
+    }else{
+      setAutoLog("❌ 失败："+JSON.stringify(d));
+      setAutoStatus("失败","badge-draft");
+    }
+  }catch(e){
+    setAutoLog("❌ 请求错误："+e.message);
+    setAutoStatus("错误","badge-draft");
+  }
+}
+
+async function runUpdateResults(){
+  setAutoStatus("更新中…","badge-active");
+  setAutoLog("正在请求 Grok 从多个来源确认今日比赛结果，约需 30–60 秒…");
+  try{
+    const r=await fetch("/admin/update-results",{method:"POST"});
+    const d=await r.json();
+    if(r.ok&&d.ok){
+      setAutoLog(`✅ 结果已更新！\n确认场数：${d.results}｜记录 ID：#${d.id}｜日期：${d.date}`);
+      setAutoStatus("完成","badge-pub");
+      loadPredictions();
+    }else{
+      setAutoLog("❌ "+(d.detail||d.status||JSON.stringify(d)));
+      setAutoStatus("失败","badge-draft");
+    }
+  }catch(e){
+    setAutoLog("❌ 请求错误："+e.message);
+    setAutoStatus("错误","badge-draft");
+  }
+}
 
 function toast(msg,err=false){
   const t=document.getElementById("toast");

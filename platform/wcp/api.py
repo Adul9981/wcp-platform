@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 
 from datetime import datetime, timezone
 from pydantic import BaseModel
-from . import db, boards, glossary, reference, scheduler, review, copywriting, admin
+from . import db, boards, glossary, reference, scheduler, review, copywriting, admin, auto_predict
 
 
 @asynccontextmanager
@@ -303,24 +303,36 @@ class PredUpdate(BaseModel):
 
 @app.get("/predictions")
 def get_predictions():
-    """公开：返回今天创建且未结束的预测（前端展示用）。"""
+    """公开：返回今日预测 + 近2日自动预测（含结果）。"""
     conn = db.connect()
     try:
-        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        rows = conn.execute(
-            "SELECT * FROM predictions WHERE published=1 AND status='active'"
-            " AND created_ts >= ? ORDER BY id DESC",
+        now_utc = datetime.now(timezone.utc)
+        today = now_utc.strftime("%Y-%m-%d")
+        two_days_ago = now_utc.replace(hour=0, minute=0, second=0, microsecond=0)
+        from datetime import timedelta
+        cutoff = (now_utc - timedelta(days=2)).strftime("%Y-%m-%d")
+
+        # AI自动预测：最近2天均展示（含昨天结果）
+        auto_rows = conn.execute(
+            "SELECT * FROM predictions WHERE published=1 AND is_auto=1 AND created_ts >= ?"
+            " ORDER BY id DESC LIMIT 3",
+            (cutoff,)).fetchall()
+
+        # 手动预测：仅今天，且开球不超过4小时
+        manual_rows = conn.execute(
+            "SELECT * FROM predictions WHERE published=1 AND (is_auto=0 OR is_auto IS NULL)"
+            " AND status='active' AND created_ts >= ? ORDER BY id DESC",
             (today,)).fetchall()
-        # 过滤掉 kickoff > 4小时前 的比赛（认为已结束）
-        now_ts = datetime.now(timezone.utc).timestamp()
-        result = []
-        for r in rows:
+
+        now_ts = now_utc.timestamp()
+        result = [dict(r) for r in auto_rows]
+        for r in manual_rows:
             d = dict(r)
             ko = d.get("kickoff")
             if ko:
                 try:
                     ko_dt = datetime.fromisoformat(ko.replace("Z", "+00:00"))
-                    if (now_ts - ko_dt.timestamp()) > 14400:   # 4小时
+                    if (now_ts - ko_dt.timestamp()) > 14400:
                         continue
                 except (ValueError, TypeError):
                     pass
@@ -394,3 +406,31 @@ def delete_prediction(pred_id: int):
         return {"ok": True}
     finally:
         conn.close()
+
+
+# ══════════════════════════════════════════════════════
+# AI 自动化接口
+# ══════════════════════════════════════════════════════
+
+@app.post("/admin/auto-predict")
+def trigger_auto_predict(date: str | None = None):
+    """触发早间任务：Grok 获取赛程 → 生成预测 → 自动发布。"""
+    try:
+        result = auto_predict.run_morning_job(date)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"{type(e).__name__}: {e}")
+
+
+@app.post("/admin/update-results")
+def trigger_update_results(date: str | None = None):
+    """触发赛后任务：Grok 多源确认结果 → 评估预测 → 更新记录。"""
+    try:
+        result = auto_predict.run_results_job(date)
+        if not result.get("ok"):
+            raise HTTPException(status_code=404, detail=result.get("status", "failed"))
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"{type(e).__name__}: {e}")
