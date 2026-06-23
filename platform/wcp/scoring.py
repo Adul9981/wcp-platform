@@ -93,13 +93,18 @@ def score_today(t, today: str | None = None) -> tuple[float, str]:
     kickoff = t.get("kickoff") or ""
     if not kickoff.startswith(td):
         return 0.0, ""
-    # 比赛开始超过 2 小时视为已结束，不再展示
+    # 比赛开始超过 105 分钟视为正常时间结束，不再展示（含伤停缓冲）
     try:
         ko_dt = datetime.fromisoformat(kickoff.replace("Z", "+00:00"))
-        if (datetime.now(timezone.utc) - ko_dt).total_seconds() > 7200:
+        elapsed = (datetime.now(timezone.utc) - ko_dt).total_seconds()
+        if elapsed > 6300:   # 105 min
             return 0.0, ""
     except (ValueError, TypeError):
         pass
+    # 价格已贴近 0/1 说明市场已结算，不展示
+    p = t.get("price")
+    if p is not None and (p >= 0.98 or p <= 0.02):
+        return 0.0, ""
     tags = t.get("strategy_tags") or []
     strat = min(1.0, len(tags) / 3.0)
     score = 0.50 + 0.50 * strat

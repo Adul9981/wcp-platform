@@ -99,6 +99,19 @@ CREATE TABLE IF NOT EXISTS posts (
     published_ts TEXT
 );
 
+-- 赛前预测：用户每天手动输入，前端按日期展示
+CREATE TABLE IF NOT EXISTS predictions (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    match_name  TEXT NOT NULL,
+    kickoff     TEXT,
+    content     TEXT NOT NULL,
+    status      TEXT DEFAULT 'active',
+    published   INTEGER DEFAULT 1,
+    created_ts  TEXT,
+    updated_ts  TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_pred_created ON predictions(created_ts);
+
 -- 复盘B：用户下注日志（手动记录操作）
 CREATE TABLE IF NOT EXISTS bet_log (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,

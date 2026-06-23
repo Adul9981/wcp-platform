@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import FileResponse
 
+from datetime import datetime, timezone
 from pydantic import BaseModel
 from . import db, boards, glossary, reference, scheduler, review, copywriting, admin
 
@@ -279,5 +280,117 @@ def get_topic(event_id: str):
         if not r:
             raise HTTPException(404, "选题不存在")
         return _row_to_topic(r)
+    finally:
+        conn.close()
+
+
+# ══════════════════════════════════════════════════════
+# 赛前预测模块
+# ══════════════════════════════════════════════════════
+
+class PredIn(BaseModel):
+    match_name: str
+    kickoff: str | None = None   # YYYY-MM-DDTHH:MM 或 YYYY-MM-DD
+    content: str
+
+
+class PredUpdate(BaseModel):
+    match_name: str | None = None
+    kickoff: str | None = None
+    content: str | None = None
+    published: int | None = None   # 1 显示 / 0 隐藏
+
+
+@app.get("/predictions")
+def get_predictions():
+    """公开：返回今天创建且未结束的预测（前端展示用）。"""
+    conn = db.connect()
+    try:
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        rows = conn.execute(
+            "SELECT * FROM predictions WHERE published=1 AND status='active'"
+            " AND created_ts >= ? ORDER BY id DESC",
+            (today,)).fetchall()
+        # 过滤掉 kickoff > 4小时前 的比赛（认为已结束）
+        now_ts = datetime.now(timezone.utc).timestamp()
+        result = []
+        for r in rows:
+            d = dict(r)
+            ko = d.get("kickoff")
+            if ko:
+                try:
+                    ko_dt = datetime.fromisoformat(ko.replace("Z", "+00:00"))
+                    if (now_ts - ko_dt.timestamp()) > 14400:   # 4小时
+                        continue
+                except (ValueError, TypeError):
+                    pass
+            result.append(d)
+        return {"count": len(result), "predictions": result}
+    finally:
+        conn.close()
+
+
+@app.post("/admin/predictions")
+def create_prediction(p: PredIn):
+    ts = datetime.now(timezone.utc).isoformat()
+    conn = db.connect()
+    try:
+        cur = conn.execute(
+            "INSERT INTO predictions(match_name,kickoff,content,status,published,created_ts,updated_ts)"
+            " VALUES(?,?,?,?,?,?,?)",
+            (p.match_name.strip(), p.kickoff, p.content.strip(), "active", 1, ts, ts))
+        conn.commit()
+        return {"ok": True, "id": cur.lastrowid}
+    finally:
+        conn.close()
+
+
+@app.get("/admin/predictions")
+def list_predictions(status: str | None = None):
+    conn = db.connect()
+    try:
+        if status:
+            rows = conn.execute(
+                "SELECT * FROM predictions WHERE status=? ORDER BY id DESC", (status,)).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM predictions ORDER BY id DESC").fetchall()
+        return {"count": len(rows), "predictions": [dict(r) for r in rows]}
+    finally:
+        conn.close()
+
+
+@app.patch("/admin/predictions/{pred_id}")
+def update_prediction(pred_id: int, u: PredUpdate):
+    conn = db.connect()
+    try:
+        if not conn.execute("SELECT id FROM predictions WHERE id=?", (pred_id,)).fetchone():
+            raise HTTPException(404, "预测不存在")
+        sets, vals = [], []
+        if u.match_name is not None:
+            sets.append("match_name=?"); vals.append(u.match_name)
+        if u.kickoff is not None:
+            sets.append("kickoff=?"); vals.append(u.kickoff)
+        if u.content is not None:
+            sets.append("content=?"); vals.append(u.content)
+        if u.published is not None:
+            sets.append("published=?"); vals.append(u.published)
+        if sets:
+            sets.append("updated_ts=?")
+            vals.append(datetime.now(timezone.utc).isoformat())
+            vals.append(pred_id)
+            conn.execute(f"UPDATE predictions SET {','.join(sets)} WHERE id=?", vals)
+            conn.commit()
+        return {"ok": True, "id": pred_id}
+    finally:
+        conn.close()
+
+
+@app.delete("/admin/predictions/{pred_id}")
+def delete_prediction(pred_id: int):
+    conn = db.connect()
+    try:
+        conn.execute("DELETE FROM predictions WHERE id=?", (pred_id,))
+        conn.commit()
+        return {"ok": True}
     finally:
         conn.close()

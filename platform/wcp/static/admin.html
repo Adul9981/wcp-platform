@@ -116,28 +116,23 @@ textarea{min-height:140px;resize:vertical;line-height:1.6}
     <div class="row">
       <div class="fi" style="flex:2">
         <label>比赛（必填）</label>
-        <input id="pMatch" placeholder="法国 vs 摩洛哥">
+        <input id="pMatch" placeholder="墨西哥 vs 南非">
       </div>
-      <div class="fi" style="flex:0 0 160px">
+      <div class="fi" style="flex:0 0 180px">
         <label>开球时间（选填）</label>
         <input id="pKickoff" type="datetime-local">
       </div>
-      <div class="fi" style="flex:0 0 90px">
-        <label>风险档</label>
-        <select id="pRisk">
-          <option value="低">低风险</option>
-          <option value="中" selected>中风险</option>
-          <option value="高">高风险</option>
-        </select>
-      </div>
-    </div>
-    <div style="margin-bottom:10px">
-      <label>方向（必填，简洁直接）</label>
-      <input id="pDir" placeholder="押法国赢，让球 -1">
     </div>
     <div style="margin-bottom:12px">
-      <label>理由（选填，2-4 句，有人味）</label>
-      <textarea id="pReason" style="min-height:80px" placeholder="法国 S 级，对手 B 级，实力差 3 档。法国小组赛最后一轮需要净胜球，有进攻动力。"></textarea>
+      <label>预测内容（直接粘贴，支持 * 开头的列表）</label>
+      <textarea id="pContent" style="min-height:180px" placeholder="预测：墨西哥胜（强烈推荐）
+比分预测：2-0 或 3-0
+理由：
+* 墨西哥作为东道主，主场氛围恐怖
+* 南非实力差距明显
+下注方向推荐：
+* 主推：墨西哥胜（1.43倍回报）
+* 保守玩法：墨西哥 -1.5让球"></textarea>
     </div>
     <button class="btn btn-primary" onclick="submitPrediction()">发布预测</button>
     <div id="predsList" style="margin-top:16px"><div class="loading">加载中…</div></div>
@@ -226,20 +221,17 @@ function fmtKo(s){if(!s)return"";try{return new Date(s).toLocaleString("zh-CN",{
 
 // ── 预测 ────────────────────────────────
 async function submitPrediction(){
-  const match=document.getElementById("pMatch").value.trim();
-  const dir=document.getElementById("pDir").value.trim();
-  if(!match||!dir){alert("比赛和方向是必填项");return;}
+  const match_name=document.getElementById("pMatch").value.trim();
+  const content=document.getElementById("pContent").value.trim();
+  if(!match_name||!content){alert("比赛名称和预测内容是必填项");return;}
   const ko=document.getElementById("pKickoff").value;
-  const koISO=ko?new Date(ko).toISOString():"";
-  const body={match,kickoff:koISO,direction:dir,
-    reasoning:document.getElementById("pReason").value.trim(),
-    risk_level:document.getElementById("pRisk").value};
+  const kickoff=ko?new Date(ko).toISOString():null;
+  const body={match_name,kickoff,content};
   const r=await fetch("/admin/predictions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
   const d=await r.json();
   if(d.ok){
     toast("预测已发布");
-    ["pMatch","pDir","pReason","pKickoff"].forEach(id=>document.getElementById(id).value="");
-    document.getElementById("pRisk").value="中";
+    ["pMatch","pContent","pKickoff"].forEach(id=>document.getElementById(id).value="");
     loadPredictions();
   }else toast("提交失败",true);
 }
@@ -251,22 +243,19 @@ async function loadPredictions(){
   if(!d.predictions||!d.predictions.length){el.innerHTML='<div class="empty">还没有预测记录</div>';return;}
   el.innerHTML=d.predictions.map(p=>{
     const isPub=p.published===1;
-    const settled=p.status==="settled";
+    const preview=(p.content||"").slice(0,120).replace(/</g,"&lt;");
     return `<div class="item" id="pred${p.id}">
       <div class="item-head">
         <div class="left">
-          <span class="badge ${settled?"badge-settled":"badge-active"}">${settled?"已结算":"进行中"}</span>
-          <span class="risk ${p.risk_level}">${p.risk_level}风险</span>
-          <b style="font-size:14px">${p.match}</b>
+          <span class="badge ${isPub?"badge-active":"badge-draft"}">${isPub?"显示中":"已隐藏"}</span>
+          <b style="font-size:14px">⚽ ${p.match_name}</b>
           ${p.kickoff?`<span class="item-ts">${fmtKo(p.kickoff)}</span>`:""}
+          <span class="item-ts">${fmtTime(p.created_ts)}</span>
         </div>
         <button class="btn-del" onclick="deletePrediction(${p.id})">删除</button>
       </div>
-      <div style="font-size:14px;font-weight:700;color:var(--blue);margin:4px 0">🎯 ${p.direction}</div>
-      ${p.reasoning?`<div style="font-size:13px;color:var(--muted)">${p.reasoning}</div>`:""}
-      ${p.result?`<div style="margin-top:6px;font-size:13px;font-weight:600;color:${p.result==="命中"?"var(--green)":"var(--red)"}">结果：${p.result}</div>`:""}
+      <div style="font-size:12px;color:var(--muted);margin:6px 0;white-space:pre-wrap">${preview}${(p.content||"").length>120?"…":""}</div>
       <div class="item-actions">
-        ${!settled?`<button class="btn btn-pub btn-sm" onclick="openSettle(${p.id})">📊 更新结果</button>`:""}
         <button class="btn btn-ghost btn-sm" onclick="togglePredVis(${p.id},${isPub?0:1})">${isPub?"隐藏":"显示"}</button>
         <span class="item-id">#${p.id}</span>
       </div>
