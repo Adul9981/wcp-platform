@@ -3,367 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>世界杯预测平台 · 2026</title>
+<title>世界杯每日预测 · 2026</title>
 <style>
-  :root{
-    --bg:#f5f7fa;--card:#fff;--border:#dde1e7;--txt:#1a1f2e;
-    --muted:#6b7280;--gold:#b45309;--green:#15803d;--blue:#1d4ed8;
-    --red:#b91c1c;--orange:#c2410c;--chip:#eef0f4;--chip-txt:#6b7280;
-    --shadow:0 1px 4px rgba(0,0,0,.07);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5;font-size:15px}
-  header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30;box-shadow:var(--shadow)}
-  .header-top{max-width:1340px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-  .logo{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
-  .logo small{font-size:12px;color:var(--muted);font-weight:400}
-  .header-links{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:13px}
-  .hlink{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;text-decoration:none;font-weight:500;white-space:nowrap;border:1px solid transparent;transition:.15s}
-  .hlink-reg{background:#1d4ed8;color:#fff}.hlink-reg:hover{background:#1e40af}
-  .hlink-code{background:#fef3c7;color:#92400e;border-color:#fcd34d;cursor:default}
-  .hlink-tw{background:#000;color:#fff}.hlink-tw:hover{background:#222}
-  .hlink-tg{background:#2CA5E0;color:#fff}.hlink-tg:hover{background:#1a96d1}
-  .header-meta{max-width:1340px;margin:0 auto;padding:4px 16px 8px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .header-meta b{color:var(--green)}
-  #refreshBtn{font-size:11px;padding:2px 10px;border-radius:12px;border:1px solid var(--blue);color:var(--blue);background:none;cursor:pointer}
-  #refreshBtn:hover{background:var(--blue);color:#fff}
-  .wrap{max-width:1340px;margin:0 auto;padding:16px}
-  /* Predictions */
-  .pred-section{margin-bottom:18px}
-  .pred-section-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-  .pred-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-  .pred-card{background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:16px;box-shadow:var(--shadow);transition:.15s}
-  .pred-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.1)}
-  .pred-match{font-size:15px;font-weight:700;margin-bottom:4px}
-  .pred-time{font-size:12px;color:var(--muted);margin-bottom:10px}
-  .pred-body{font-size:13px;color:#374151;line-height:1.8}
-  .pred-body p{margin:3px 0}
-  .pred-body ul{margin:4px 0 4px 18px}
-  .pred-body li{margin:2px 0}
-  .pred-label{font-weight:700;color:var(--txt)}
-  /* Auto predictions */
-  .auto-pred-post{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .auto-pred-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-  .auto-badge{font-size:11px;padding:3px 10px;border-radius:20px;background:#eff6ff;color:#1d4ed8;font-weight:600}
-  .auto-day{font-size:15px;font-weight:700}
-  .auto-pred-body{font-size:13px;color:#374151;line-height:1.9;white-space:pre-wrap}
-  .auto-pred-body p{margin:2px 0}
-  .auto-result-sep{margin:16px 0;border:none;border-top:2px dashed var(--border)}
-  .auto-result-body{font-size:13px;color:#374151;line-height:1.9;background:#f0fdf4;border-radius:8px;padding:12px 14px;white-space:pre-wrap}
-  .auto-result-body p{margin:2px 0}
-  /* Tabs */
-  .tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;border-bottom:2px solid var(--border);padding-bottom:0}
-  .tab{padding:9px 18px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-2px;border-radius:6px 6px 0 0;transition:.15s}
-  .tab:hover{color:var(--txt);background:var(--chip)}
-  .tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}
-  /* Panel */
-  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .panel summary{cursor:pointer;padding:11px 14px;font-size:13px;font-weight:600;list-style:none;color:var(--muted)}
-  .panel summary::-webkit-details-marker{display:none}
-  .panel summary::before{content:"▸ ";color:var(--gold)}
-  .panel[open] summary::before{content:"▾ "}
-  .strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;padding:0 14px 14px}
-  .strat{font-size:12px;color:var(--muted)}.strat b{color:var(--green)}
-  .pm-note{padding:10px 14px;font-size:12px;color:#92400e;background:#fffbeb;border-top:1px solid #fcd34d;border-radius:0 0 10px 10px;line-height:1.6}
-  /* Filters */
-  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-  .filters .lbl{font-size:12px;color:var(--muted);margin-right:2px}
-  .fchip{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:.15s}
-  .fchip:hover{border-color:var(--blue);color:var(--blue)}
-  .fchip.active{color:#fff;border-color:var(--blue);background:var(--blue)}
-  /* Boards */
-  .boards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  @media(max-width:900px){.boards{grid-template-columns:1fr}}
-  .col h2{font-size:13px;font-weight:700;margin-bottom:10px;padding:8px 12px;border-radius:8px}
-  .col.today h2{background:#eff6ff;color:#1d4ed8}
-  .col.low_risk h2{background:#f0fdf4;color:#15803d}
-  .col.high_risk h2{background:#fff7ed;color:#c2410c}
-  /* Cards */
-  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:10px;box-shadow:var(--shadow);transition:.15s}
-  .card:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);transform:translateY(-1px)}
-  .card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-  .card .title{font-size:13px;font-weight:600;flex:1;line-height:1.4}
-  .rank{font-size:12px;color:var(--muted);min-width:22px}
-  .chips{display:flex;gap:4px;flex-wrap:wrap;margin:7px 0}
-  .chip{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--chip);color:var(--chip-txt)}
-  .chip.strat{background:#eff6ff;color:#1d4ed8;cursor:help}
-  .chip.risk-low{background:#f0fdf4;color:#15803d;font-weight:600}
-  .chip.risk-high{background:#fff7ed;color:#c2410c;font-weight:600}
-  .chip.risk-swing{background:#fef9c3;color:#a16207;font-weight:600}
-  .chip.isnew{background:#fef3c7;color:#92400e}
-  .nums{display:flex;gap:12px;font-size:12px;color:var(--muted);margin:6px 0;flex-wrap:wrap}
-  .nums .v{color:var(--txt);font-weight:600}
-  .pay{color:var(--green);font-weight:700}.pay.high{color:var(--orange)}
-  .dir{margin:8px 0;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:13px}
-  .dir b{color:#166534;font-size:14px}
-  .dir .dprice{color:var(--green);font-weight:700;margin-left:4px}
-  .dir .dconf{float:right;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:1px 7px}
-  .dir .dbasis{font-size:11px;color:var(--muted);margin-top:3px}
-  .go{display:inline-block;margin-top:8px;font-size:12px;color:var(--blue);text-decoration:none;border:1px solid var(--blue);border-radius:6px;padding:5px 12px;font-weight:500}
-  .go:hover{background:var(--blue);color:#fff}
-  /* Progress */
-  .pbar{height:8px;background:var(--chip);border-radius:6px;overflow:hidden;margin:8px 0}
-  .pbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold))}
-  .timeline{display:flex;flex-direction:column;gap:10px;margin-top:14px}
-  .stage{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;box-shadow:var(--shadow)}
-  .stage .dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex-shrink:0;background:var(--muted)}
-  .stage.done .dot{background:var(--green)}.stage.live .dot{background:var(--gold);box-shadow:0 0 0 4px #fef3c7}
-  .stage .sname{font-weight:600;font-size:15px}.stage .sdate{font-size:12px;color:var(--muted)}.stage .sdesc{font-size:12px;color:var(--muted);margin-top:4px}
-  .stage .stag{font-size:11px;padding:2px 10px;border-radius:5px;margin-left:auto;white-space:nowrap;font-weight:600}
-  .stag.done{background:#f0fdf4;color:var(--green)}.stag.live{background:#fef3c7;color:var(--gold)}.stag.todo{background:var(--chip);color:var(--muted)}
-  .loading{text-align:center;color:var(--muted);padding:40px;font-size:14px}
-  .err{color:var(--red);text-align:center;padding:20px}
-  .hidden{display:none}
-  footer{padding:16px;color:var(--muted);font-size:11px;text-align:center;border-top:1px solid var(--border);margin-top:20px}
+:root{
+  --bg:#f5f7fa;--card:#fff;--border:#e2e8f0;--txt:#0f172a;
+  --muted:#64748b;--green:#16a34a;--blue:#2563eb;--gold:#d97706;
+  --red:#dc2626;--shadow:0 1px 3px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;font-size:15px}
+
+/* ── Header ── */
+header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30;box-shadow:var(--shadow)}
+.hinner{max-width:780px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.logo{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.logo span{color:var(--green)}
+.hlinks{display:flex;gap:6px;flex-wrap:wrap}
+.hl{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;transition:.15s}
+.hl-tg{background:#229ED9;color:#fff}.hl-tg:hover{background:#1a8fc2}
+.hl-qq{background:#12B7F5;color:#fff}.hl-qq:hover{background:#0da0d8}
+.hl-pm{background:var(--blue);color:#fff}.hl-pm:hover{background:#1d4ed8}
+
+/* ── Stats bar ── */
+.stats{background:var(--green);color:#fff}
+.stats-inner{max-width:780px;margin:0 auto;padding:10px 16px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.stat{display:flex;flex-direction:column;align-items:center}
+.stat-val{font-size:20px;font-weight:800;line-height:1}
+.stat-lbl{font-size:11px;opacity:.8;margin-top:2px}
+.stat-sep{width:1px;background:rgba(255,255,255,.3);height:32px}
+
+/* ── Wrap ── */
+.wrap{max-width:780px;margin:0 auto;padding:20px 16px}
+
+/* ── Today prediction (hero) ── */
+.today-section{margin-bottom:24px}
+.section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.pred-post{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.pred-post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.pred-day{font-size:17px;font-weight:800}
+.pred-ts{font-size:11px;color:var(--muted)}
+.pred-content{font-size:14px;color:#1e293b;line-height:1.9;white-space:pre-wrap}
+.pred-content p{margin:2px 0}
+.pred-content .lbl{font-weight:700;color:var(--txt)}
+.pred-content ul{margin:4px 0 4px 18px}
+.pred-content li{margin:1px 0}
+.result-sep{margin:16px 0;border:none;border-top:2px dashed #e2e8f0}
+.result-block{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px;font-size:14px;line-height:1.9;white-space:pre-wrap;color:#14532d}
+.result-block p{margin:2px 0}
+.no-pred{background:#fff;border:1px solid var(--border);border-radius:14px;padding:40px 20px;text-align:center;color:var(--muted)}
+.no-pred .icon{font-size:36px;margin-bottom:10px}
+.no-pred p{font-size:14px}
+
+/* ── Community CTA ── */
+.cta-section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:24px;text-align:center}
+.cta-title{font-size:15px;font-weight:700;margin-bottom:6px}
+.cta-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.cta-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:24px;text-decoration:none;font-size:13px;font-weight:700;transition:.15s}
+.cta-tg{background:#229ED9;color:#fff}.cta-tg:hover{background:#1a8fc2}
+.cta-qq{background:#12B7F5;color:#fff}.cta-qq:hover{background:#0da0d8}
+.cta-pm{border:1.5px solid var(--blue);color:var(--blue);background:#fff}.cta-pm:hover{background:var(--blue);color:#fff}
+.invite{font-size:12px;color:var(--muted);margin-top:10px}
+.invite b{color:var(--gold)}
+
+/* ── History ── */
+.history-section{}
+.history-item{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.history-hd{display:flex;align-items:center;padding:12px 16px;cursor:pointer;gap:10px;user-select:none}
+.history-hd:hover{background:#f8fafc}
+.history-day{font-size:14px;font-weight:700;flex:1}
+.history-meta{display:flex;gap:8px;font-size:12px;align-items:center;flex-wrap:wrap}
+.hm-hit{color:var(--green);font-weight:700}
+.hm-miss{color:var(--red)}
+.hm-total{color:var(--muted)}
+.chevron{color:var(--muted);transition:.2s;font-size:12px}
+.history-body{border-top:1px solid var(--border);padding:16px;display:none;font-size:13px;line-height:1.9;white-space:pre-wrap;color:#334155}
+.history-body p{margin:2px 0}
+.history-body.open{display:block}
+.history-result{background:#f0fdf4;border-radius:8px;padding:12px;margin-top:12px;font-size:13px;line-height:1.9;white-space:pre-wrap;color:#14532d}
+.history-result p{margin:2px 0}
+
+.loading{text-align:center;color:var(--muted);padding:40px;font-size:14px}
+.empty{text-align:center;color:var(--muted);padding:30px;font-size:13px}
+footer{padding:20px 16px;color:var(--muted);font-size:12px;text-align:center;border-top:1px solid var(--border);margin-top:8px;line-height:1.8}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="header-top">
-    <div class="logo">⚽ 世界杯预测 <small>2026</small></div>
-    <div class="header-links">
-      <a class="hlink hlink-reg" href="https://polymarket.com/?r=adul" target="_blank" rel="noopener">🔗 注册 Polymarket</a>
-      <span class="hlink hlink-code">邀请码：adul</span>
-      <a class="hlink hlink-tw" href="https://x.com/rich_adul" target="_blank" rel="noopener">𝕏 @rich_adul</a>
-      <a class="hlink hlink-tg" href="https://t.me/serene7mc" target="_blank" rel="noopener">✈ Telegram</a>
+  <div class="hinner">
+    <div class="logo">⚽ 世界杯<span>每日预测</span></div>
+    <div class="hlinks" id="hlinks">
+      <a class="hl hl-tg" href="#" id="hTg" target="_blank">✈ Telegram</a>
+      <a class="hl hl-qq" href="#" id="hQq" target="_blank">💬 QQ群</a>
+      <a class="hl hl-pm" href="https://polymarket.com/?r=adul" target="_blank" rel="noopener">🔗 Polymarket</a>
     </div>
-  </div>
-  <div class="header-meta">
-    <span id="meta">加载中…</span>
-    <button id="refreshBtn">立即刷新</button>
-    <span id="refreshInfo"></span>
   </div>
 </header>
-<div class="wrap">
-  <div id="predictionsSection"></div>
-  <div id="boardsView">
-    <details class="panel" id="stratPanel">
-      <summary>📖 策略说明</summary>
-      <div class="strat-grid" id="stratGrid"></div>
-      <div class="pm-note">💡 <b>Polymarket 特点</b>：预测市场支持<b>比赛全程随时买入或卖出</b>，不只限赛前。场上形势发生变化时赔率会实时波动，可根据比赛走势灵活操作。所有交易请在 Polymarket 自行完成，本站仅提供参考方向。</div>
-    </details>
-    <div class="tabs" id="tabs">
-      <button class="tab active" data-v="all">全部三榜</button>
-      <button class="tab" data-v="today">📅 今日关注</button>
-      <button class="tab" data-v="low_risk">🛡️ 低风险</button>
-      <button class="tab" data-v="high_risk">🎲 高风险</button>
-      <button class="tab" data-v="progress">📅 赛程进度</button>
-    </div>
-    <div class="filters" id="filters"></div>
-    <div class="boards" id="boards"><div class="loading">加载中…</div></div>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-val" id="sRate">--%</div><div class="stat-lbl">主推命中率</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-val" id="sTotal">--</div><div class="stat-lbl">已预测场次</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-val" id="sDay">--</div><div class="stat-lbl">世界杯进行中</div></div>
   </div>
-  <div id="progressView" class="hidden"></div>
 </div>
-<footer id="disclaimer"></footer>
+
+<div class="wrap">
+
+  <!-- 今日预测 -->
+  <div class="today-section">
+    <div class="section-title">今日预测方案</div>
+    <div id="todayPred"><div class="loading">加载中…</div></div>
+  </div>
+
+  <!-- 社群入口 -->
+  <div class="cta-section">
+    <div class="cta-title">加入社群，第一时间获取每日预测</div>
+    <div class="cta-sub">预测方案每天赛前自动更新，加群即可实时收到</div>
+    <div class="cta-btns">
+      <a class="cta-btn cta-tg" href="#" id="ctaTg" target="_blank">✈ 加入 Telegram 群</a>
+      <a class="cta-btn cta-qq" href="#" id="ctaQq" target="_blank">💬 加入 QQ 群</a>
+      <a class="cta-btn cta-pm" href="https://polymarket.com/?r=adul" target="_blank" rel="noopener">🔗 注册 Polymarket</a>
+    </div>
+    <div class="invite">Polymarket 邀请码：<b>adul</b>（注册时填入）</div>
+  </div>
+
+  <!-- 历史记录 -->
+  <div class="history-section">
+    <div class="section-title">历史预测记录</div>
+    <div id="historyList"><div class="loading">加载中…</div></div>
+  </div>
+
+</div>
+
+<footer>
+  本站预测由 AI 辅助生成，仅供参考，不构成投资建议。<br>
+  所有投注请在 Polymarket 自行完成，风险自担。<br>
+  <a href="/admin" style="color:var(--muted)">后台管理</a>
+</footer>
+
 <script>
-const LABEL={today:"📅 今日关注",low_risk:"🛡️ 低风险",high_risk:"🎲 高风险"};
-const BOARD_KEYS=["today","low_risk","high_risk"];
-let DATA=null,STRAT={},view="all",fLine="all",fType="all";
+const WC_START = new Date("2026-06-11T00:00:00Z");
 
-function fmtNum(n){if(!n)return"0";if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return(n/1e3).toFixed(1)+"K";return Math.round(n);}
-function fmtTime(s){if(!s)return"--";const d=new Date(s);return d.toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});}
-function fmtDate(s){if(!s)return"--";return s.replaceAll("-","/").slice(5);}
-function stratTip(code){const s=STRAT[code];return s?`策略${code}·${s.name}：${s.desc}`:`策略${code}`;}
-
-function riskChip(e){
-  const r=e.reason||"";
-  if(r.includes("长赔"))return`<span class="chip risk-high">🎲 长赔</span>`;
-  if(r.includes("摇摆")||r.includes("生死"))return`<span class="chip risk-swing">⚡ 摇摆</span>`;
-  if(r.includes("低风险"))return`<span class="chip risk-low">🛡️ 低风险</span>`;
-  return"";
+function dayNum(){
+  const d = Math.floor((Date.now() - WC_START.getTime()) / 86400000) + 1;
+  return Math.max(1, d);
 }
 
-function card(e,i){
-  const tags=(e.strategy_tags||[]).map(t=>`<span class="chip strat" title="${stratTip(t)}">策略${t}·${(STRAT[t]||{}).name||""}</span>`).join("");
-  const isnew=e.is_new?`<span class="chip isnew">🆕 新上线</span>`:"";
-  const pr=e.payoff_ratio;
-  const pay=pr?`<span>盈亏比 <span class="pay ${pr>5?"high":""}">${pr}x</span></span>`:"";
-  const price=e.price!=null?`<span>概率 <span class="v">${(e.price*100).toFixed(1)}%</span></span>`:"";
-  const ko=e.kickoff?`<span>开赛 ${fmtTime(e.kickoff)}</span>`:"";
-  const d=e.direction;
-  const dp=d&&d.price!=null?` <span class="dprice">${(d.price*100).toFixed(0)}%</span>`:"";
-  const dir=d?`<div class="dir">🎯 <b>${d.label}</b>${dp}<span class="dconf">信心${d.confidence||"-"}</span><div class="dbasis">${d.basis||""}</div></div>`:"";
-  return`<div class="card" data-line="${e.line}" data-type="${e.bet_type||"-"}">
-    <div class="top"><span class="rank">#${i+1}</span><span class="title">${e.title}</span></div>
-    <div class="chips"><span class="chip">${e.line}</span><span class="chip">${e.bet_type||"-"}</span>${riskChip(e)}${isnew}${tags}</div>
-    ${dir}
-    <div class="nums">${price}${pay}<span>成交 <span class="v">${fmtNum(e.volume)}</span></span>${ko?`<span>${ko}</span>`:""}</div>
-    <a class="go" href="${e.event_url}" target="_blank" rel="noopener">前往 Polymarket ↗</a>
-  </div>`;
+function fmtTime(s){
+  if(!s) return "";
+  return new Date(s).toLocaleString("zh-CN",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
 }
 
-function matchFilter(e){
-  if(fLine!=="all"&&e.line!==fLine)return false;
-  if(fType!=="all"&&(e.bet_type||"-")!==fType)return false;
-  return true;
-}
-function colHtml(key){
-  const items=(DATA[key]||[]).filter(matchFilter);
-  return`<div class="col ${key}"><h2>${LABEL[key]}</h2>${items.length?items.map(card).join(""):'<div class="loading">暂无符合条件的选题</div>'}</div>`;
-}
-function renderFilters(){
-  const all=BOARD_KEYS.flatMap(k=>DATA[k]||[]);
-  const types=[...new Set(all.map(e=>e.bet_type||"-"))];
-  const lc=[["all","全部"],["单场","单场"],["长盘","长盘"]].map(([v,t])=>`<span class="fchip ${fLine===v?"active":""}" data-f="line" data-v="${v}">${t}</span>`).join("");
-  const tc=`<span class="fchip ${fType==="all"?"active":""}" data-f="type" data-v="all">全部</span>`+
-    types.map(t=>`<span class="fchip ${fType===t?"active":""}" data-f="type" data-v="${t}">${t}</span>`).join("");
-  document.getElementById("filters").innerHTML=`<span class="lbl">类型：</span>${lc}<span class="lbl" style="margin-left:8px">盘口：</span>${tc}`;
-}
-function renderBoards(){
-  const box=document.getElementById("boards");
-  const keys=view==="all"?BOARD_KEYS:[view];
-  box.style.gridTemplateColumns=view==="all"?"repeat(3,1fr)":"1fr";
-  box.innerHTML=keys.map(colHtml).join("");
-}
-function renderStrategies(){
-  document.getElementById("stratGrid").innerHTML=
-    Object.entries(STRAT).map(([k,s])=>`<div class="strat"><b>策略${k}·${s.name}</b>：${s.desc}</div>`).join("");
-}
-
-function formatContent(text){
-  if(!text)return"";
-  const e=text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  const lines=e.split("\n");let html="",inList=false;
+function formatContent(text, cls="pred-content"){
+  if(!text) return "";
+  const esc = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const lines = esc.split("\n");
+  let html = `<div class="${cls}">`, inList = false;
   for(const raw of lines){
-    const line=raw.trim();
-    if(!line){if(inList){html+="</ul>";inList=false;}continue;}
+    const line = raw.trim();
+    if(!line){ if(inList){html+="</ul>";inList=false;} html+="<p>&nbsp;</p>"; continue; }
     if(line.startsWith("* ")||line.startsWith("• ")){
       if(!inList){html+="<ul>";inList=true;}
       html+=`<li>${line.slice(2)}</li>`;
-    }else{
+    } else {
       if(inList){html+="</ul>";inList=false;}
-      html+=`<p class="${/[：:]$/.test(line)?"pred-label":""}">${line}</p>`;
+      const isLabel = /[：:：]$/.test(line) || /^Day\d+/.test(line) || /^\d+\.\s/.test(line);
+      html+=`<p class="${isLabel?"lbl":""}">${line}</p>`;
     }
   }
-  if(inList)html+="</ul>";
+  if(inList) html+="</ul>";
+  html+="</div>";
   return html;
 }
 
-async function renderPredictions(){
-  const sec=document.getElementById("predictionsSection");
+function countResults(text){
+  if(!text) return {hits:0, miss:0};
+  const hits = (text.match(/✅/g)||[]).length;
+  const miss = (text.match(/0️⃣/g)||[]).length;
+  return {hits, miss};
+}
+
+// ── 配置（社群链接）──
+async function loadConfig(){
   try{
-    const d=await(await fetch("/predictions")).json();
-    if(!d.predictions||!d.predictions.length){sec.innerHTML="";return;}
-
-    // 分开自动和手动预测
-    const auto=d.predictions.filter(p=>p.is_auto===1||p.is_auto==="1"||p.is_auto===true);
-    const manual=d.predictions.filter(p=>!p.is_auto);
-
-    let html="";
-
-    // 自动生成：全宽块状展示
-    if(auto.length){
-      const posts=auto.map(p=>{
-        const hasResult=p.result_text&&p.result_text.trim();
-        return`<div class="auto-pred-post">
-          <div class="auto-pred-head">
-            <span class="auto-badge">🤖 AI 自动预测</span>
-            <span class="auto-day">${p.match_name||""}</span>
-            <span style="font-size:11px;color:var(--muted);margin-left:auto">${fmtTime(p.updated_ts||p.created_ts)}</span>
-          </div>
-          <div class="auto-pred-body">${formatContent(p.content)}</div>
-          ${hasResult?`<div class="auto-result-sep"></div><div class="auto-result-body">${formatContent(p.result_text)}</div>`:""}
-        </div>`;
-      }).join("");
-      html+=`<div class="pred-section">${posts}</div>`;
+    const cfg = await (await fetch("/config")).json();
+    if(cfg.tg_link){
+      document.getElementById("hTg").href = cfg.tg_link;
+      document.getElementById("ctaTg").href = cfg.tg_link;
     }
-
-    // 手动：卡片网格
-    if(manual.length){
-      const cards=manual.map(p=>`<div class="pred-card">
-        <div class="pred-match">⚽ ${p.match_name}</div>
-        ${p.kickoff?`<div class="pred-time">开赛：${fmtTime(p.kickoff)}</div>`:""}
-        <div class="pred-body">${formatContent(p.content)}</div>
-      </div>`).join("");
-      html+=`<div class="pred-section">
-        <div class="pred-section-title">📋 手动预测 <span style="font-size:12px;font-weight:400;color:var(--muted)">（作者添加）</span></div>
-        <div class="pred-grid">${cards}</div>
-      </div>`;
+    if(cfg.qq_link){
+      document.getElementById("hQq").href = cfg.qq_link;
+      document.getElementById("ctaQq").href = cfg.qq_link;
     }
-
-    sec.innerHTML=html;
-  }catch(e){sec.innerHTML="";}
-}
-
-async function renderProgress(){
-  const pv=document.getElementById("progressView");
-  pv.innerHTML='<div class="loading">加载中…</div>';
-  try{
-    const p=await(await fetch("/progress")).json();
-    const stages=p.stages.map(s=>{
-      const cls=s.status==="已结束"?"done":s.status==="进行中"?"live":"";
-      const tag=s.status==="已结束"?"done":s.status==="进行中"?"live":"todo";
-      return`<div class="stage ${cls}"><span class="dot"></span><div>
-        <div class="sname">${s.name}</div><div class="sdate">${fmtDate(s.start)} — ${fmtDate(s.end)}</div>
-        <div class="sdesc">${s.desc}</div></div><span class="stag ${tag}">${s.status}</span></div>`;
-    }).join("");
-    const st=await(await fetch("/standings")).json();
-    const stC=s=>s==="已出线"?"#15803d":s==="已淘汰"?"#aaa":s==="小组赛中"?"#b45309":"var(--muted)";
-    const grps=Object.entries(st.groups).map(([g,rows])=>{
-      const tr=rows.map(r=>`<tr><td>${r.rank||"-"}</td><td>${r.team}${r.is_host?"🏠":""}</td>
-        <td>${r.played}</td><td>${r.w}/${r.d}/${r.l}</td><td>${r.gf-r.ga>0?"+":""}${r.gf-r.ga}</td>
-        <td><b>${r.pts}</b></td><td style="color:${stC(r.status)}">${r.status}</td></tr>`).join("");
-      return`<div class="panel" style="padding:10px;margin-bottom:10px">
-        <div style="font-weight:700;margin-bottom:6px;font-size:13px">${g}组</div>
-        <table style="width:100%;font-size:12px;border-collapse:collapse">
-        <thead><tr style="color:var(--muted)"><td>名</td><td>队</td><td>赛</td><td>胜平负</td><td>净</td><td>分</td><td>状态</td></tr></thead>
-        <tbody>${tr}</tbody></table></div>`;
-    }).join("");
-    pv.innerHTML=`<div class="panel" style="padding:14px;margin-bottom:14px">
-      <div style="font-size:15px;font-weight:700">当前阶段：<span style="color:var(--gold)">${p.current_stage}</span>
-      <span style="float:right;color:var(--muted);font-size:12px">进度 ${p.overall_percent}%（${p.today}）</span></div>
-      <div class="pbar"><i style="width:${p.overall_percent}%"></i></div>
-    </div><div class="timeline">${stages}</div>
-    <h2 style="margin:16px 0 8px;font-size:14px">📊 小组积分榜</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">${grps}</div>`;
-  }catch(err){pv.innerHTML=`<div class="err">进度加载失败：${err.message}</div>`;}
-}
-
-function switchView(){
-  const isBoard=view!=="progress";
-  document.getElementById("boardsView").classList.toggle("hidden",!isBoard);
-  document.getElementById("progressView").classList.toggle("hidden",view!=="progress");
-  if(view==="progress")renderProgress();else renderBoards();
-}
-
-async function updateRefreshInfo(){
-  try{
-    const s=await(await fetch("/refresh-status")).json();
-    document.getElementById("refreshInfo").textContent=
-      `每${s.interval_min}分钟自动刷新${s.runs?" · 已刷新"+s.runs+"次":""}`;
   }catch(e){}
 }
-document.getElementById("refreshBtn").addEventListener("click",async function(){
-  const b=this;b.disabled=true;b.textContent="刷新中…";
-  try{await fetch("/refresh",{method:"POST"});await load();}catch(e){}
-  b.disabled=false;b.textContent="立即刷新";
-});
 
-async function load(){
+// ── 今日预测 ──
+async function loadToday(){
+  const box = document.getElementById("todayPred");
   try{
-    STRAT=await(await fetch("/strategies")).json();
-    renderStrategies();
-    DATA=await(await fetch("/boards?top_n=20")).json();
-    const m=DATA.meta||{};
-    const sample=(DATA.today[0]||DATA.low_risk[0]||DATA.high_risk[0]||{}).snapshot_ts;
-    document.getElementById("meta").innerHTML=`共 <b>${m.total_topics||0}</b> 个选题 · 数据时间 ${fmtTime(sample)}`;
-    document.getElementById("disclaimer").textContent=(m.disclaimer||"")+" · 数据来源 Polymarket";
-    updateRefreshInfo();renderFilters();renderBoards();renderPredictions();
-  }catch(err){
-    document.getElementById("boards").innerHTML=`<div class="err">加载失败：${err.message}</div>`;
+    const d = await (await fetch("/predictions")).json();
+    const preds = d.predictions || [];
+    if(!preds.length){
+      box.innerHTML=`<div class="no-pred"><div class="icon">🕐</div><p>今日预测方案即将发布<br><span style="font-size:12px;color:var(--muted)">每天赛前自动生成</span></p></div>`;
+      return;
+    }
+    // 最新的一条（自动生成优先）
+    const auto = preds.find(p=>p.is_auto===1||p.is_auto===true);
+    const p = auto || preds[0];
+    const hasResult = p.result_text && p.result_text.trim();
+    box.innerHTML=`<div class="pred-post">
+      <div class="pred-post-head">
+        <div class="pred-day">${p.match_name||"今日预测"}</div>
+        <div class="pred-ts">更新于 ${fmtTime(p.updated_ts||p.created_ts)}</div>
+      </div>
+      ${formatContent(p.content)}
+      ${hasResult?`<div class="result-sep"></div>${formatContent(p.result_text,"result-block")}`:""}
+    </div>`;
+  }catch(e){
+    box.innerHTML=`<div class="no-pred"><div class="icon">⚠️</div><p>加载失败，请刷新重试</p></div>`;
   }
 }
-document.getElementById("tabs").addEventListener("click",e=>{
-  const v=e.target.dataset.v;if(!v)return;
-  view=v;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.v===v));
-  switchView();
-});
-document.getElementById("filters").addEventListener("click",e=>{
-  const f=e.target.dataset.f;if(!f)return;
-  if(f==="line")fLine=e.target.dataset.v;else fType=e.target.dataset.v;
-  renderFilters();renderBoards();
-});
-load();
+
+// ── 历史记录 ──
+async function loadHistory(){
+  const box = document.getElementById("historyList");
+  try{
+    const d = await (await fetch("/history?per_page=30")).json();
+    const items = d.items || [];
+    if(!items.length){
+      box.innerHTML=`<div class="empty">历史记录将在这里显示</div>`;
+      return;
+    }
+    box.innerHTML = items.map((p,i)=>{
+      const hasResult = p.result_text && p.result_text.trim();
+      const {hits, miss} = countResults(p.result_text||"");
+      const metaHtml = hasResult
+        ? `<span class="hm-hit">✅ ${hits}中</span><span class="hm-miss">0️⃣ ${miss}未中</span>`
+        : `<span class="hm-total">待更新</span>`;
+      return`<div class="history-item">
+        <div class="history-hd" onclick="toggleHistory(this)">
+          <div class="history-day">${p.match_name||"预测记录"}</div>
+          <div class="history-meta">${metaHtml}<span class="hm-total">${fmtTime(p.created_ts).slice(0,5)}</span></div>
+          <div class="chevron">▸</div>
+        </div>
+        <div class="history-body">
+          ${formatContent(p.content)}
+          ${hasResult?`<div class="history-result">${formatContent(p.result_text)}</div>`:""}
+        </div>
+      </div>`;
+    }).join("");
+  }catch(e){
+    box.innerHTML=`<div class="empty">历史记录加载失败</div>`;
+  }
+}
+
+function toggleHistory(hd){
+  const body = hd.nextElementSibling;
+  const chevron = hd.querySelector(".chevron");
+  body.classList.toggle("open");
+  chevron.textContent = body.classList.contains("open") ? "▾" : "▸";
+}
+
+// ── 命中率统计 ──
+async function loadStats(){
+  try{
+    const d = await (await fetch("/history?per_page=100")).json();
+    const items = d.items || [];
+    let hits=0, total=0;
+    items.forEach(p=>{
+      if(p.result_text){
+        const r = countResults(p.result_text);
+        hits += r.hits;
+        total += r.hits + r.miss;
+      }
+    });
+    document.getElementById("sDay").textContent = `Day ${dayNum()}`;
+    document.getElementById("sTotal").textContent = total || "--";
+    document.getElementById("sRate").textContent = total ? Math.round(hits/total*100)+"%" : "--%";
+  }catch(e){
+    document.getElementById("sDay").textContent = `Day ${dayNum()}`;
+  }
+}
+
+// ── 初始化 ──
+loadConfig();
+loadToday();
+loadHistory();
+loadStats();
 </script>
 </body>
 </html>

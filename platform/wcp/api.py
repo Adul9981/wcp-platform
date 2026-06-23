@@ -212,6 +212,37 @@ def get_boards(top_n: int = Query(15, ge=1, le=50), today: str | None = None):
     return boards.generate(top_n=top_n, today=today)
 
 
+@app.get("/config")
+def get_public_config():
+    """公开配置：社群链接、邀请码等（通过环境变量更新，无需重新部署）。"""
+    import os
+    return {
+        "tg_link": os.environ.get("TG_GROUP_LINK", ""),
+        "qq_link": os.environ.get("QQ_GROUP_LINK", ""),
+        "polymarket_link": "https://polymarket.com/?r=adul",
+        "invite_code": "adul",
+        "twitter": "https://x.com/rich_adul",
+    }
+
+
+@app.get("/history")
+def get_history(page: int = 0, per_page: int = 20):
+    """公开：历史预测记录（按天倒序，含结果）。"""
+    conn = db.connect()
+    try:
+        rows = conn.execute(
+            "SELECT * FROM predictions WHERE published=1"
+            " ORDER BY created_ts DESC LIMIT ? OFFSET ?",
+            (per_page, page * per_page)
+        ).fetchall()
+        total = conn.execute(
+            "SELECT COUNT(*) FROM predictions WHERE published=1"
+        ).fetchone()[0]
+        return {"total": total, "page": page, "items": [dict(r) for r in rows]}
+    finally:
+        conn.close()
+
+
 @app.get("/strategies")
 def get_strategies():
     """策略说明（要求#4）。"""
