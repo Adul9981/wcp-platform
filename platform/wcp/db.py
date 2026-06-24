@@ -10,30 +10,6 @@ import os
 from . import config
 
 SCHEMA = """
-CREATE TABLE IF NOT EXISTS posts (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    type         TEXT DEFAULT '分析',
-    title        TEXT,
-    raw_content  TEXT,
-    content      TEXT NOT NULL,
-    status       TEXT DEFAULT 'draft',
-    created_ts   TEXT,
-    published_ts TEXT
-);
-
-CREATE TABLE IF NOT EXISTS predictions (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    match       TEXT NOT NULL,
-    kickoff     TEXT,
-    direction   TEXT NOT NULL,
-    reasoning   TEXT,
-    risk_level  TEXT DEFAULT '中',
-    status      TEXT DEFAULT 'active',
-    result      TEXT,
-    published   INTEGER DEFAULT 1,
-    created_ts  TEXT
-);
-
 CREATE TABLE IF NOT EXISTS topics (
     event_id      TEXT PRIMARY KEY,
     slug          TEXT,
@@ -161,8 +137,8 @@ def _migrate(conn):
 def init_db(conn=None):
     own = conn is None
     conn = conn or connect()
+    _migrate(conn)          # 先给旧表加新列，再跑 executescript 建索引
     conn.executescript(SCHEMA)
-    _migrate(conn)
     conn.commit()
     if own:
         conn.close()
